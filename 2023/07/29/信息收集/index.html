@@ -23,7 +23,7 @@
 <meta property="og:description" content="域名（身份证）网域.com代表工商业.net代表网络提供商.org代表非盈利组织">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-07-29T09:17:00.000Z">
-<meta property="article:modified_time" content="2023-07-29T09:21:48.526Z">
+<meta property="article:modified_time" content="2023-08-04T03:25:38.700Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary"><meta name="generator" content="Hexo 6.3.0"></head>
 
@@ -94,7 +94,7 @@
 </tr>
 <tr>
 <td><a target="_blank" rel="noopener" href="https://www.shodan.io/">https://www.shodan.io/</a></td>
-<td>搜索某一设备（路由器交换机   思科华为）<br/> 指定端口prot：22 指定服务ssh 指定城市country“CN” 指定IP地址host“xxxx”</td>
+<td>搜索某一设备（路由器交换机   思科华为）<br/>指定端口prot：22 指定服务ssh 指定城市country“CN” 指定IP地址host“xxxx”</td>
 </tr>
 <tr>
 <td><a target="_blank" rel="noopener" href="https://www.ip138.com/">https://www.ip138.com/</a></td>
@@ -124,7 +124,60 @@
 <td><a target="_blank" rel="noopener" href="https://crt.sh/">https://crt.sh/</a></td>
 <td>证书查询</td>
 </tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">https://beian.miit.gov.cn/#/Integrated/index</a></td>
+<td>可以通过企业名称、学校名称等等搜索到域名以及备案信息</td>
+</tr>
+<tr>
+<td><strong>空间搜索引擎</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://fofa.info/">https://fofa.info/</a></td>
+<td>fofa网络空间搜索引擎</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.zoomeye.org/">https://www.zoomeye.org/</a></td>
+<td>钟馗之眼网络空间搜索引擎</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://quake.360.net/quake/#/index">https://quake.360.net/quake/#/index</a></td>
+<td>360网络空间搜索引擎</td>
+</tr>
+<tr>
+<td><strong>指纹识别平台</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://finger.tidesec.net/">http://finger.tidesec.net/</a></td>
+<td>潮汐在线指纹识别</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.yunsee.cn/">https://www.yunsee.cn/</a></td>
+<td>云悉在线指纹识别</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://fp.shuziguanxing.com/#/">https://fp.shuziguanxing.com/#/</a></td>
+<td>360指纹收录平台</td>
+</tr>
 </tbody></table>
+<h1 id="搜索范围"><a href="#搜索范围" class="headerlink" title="搜索范围"></a>搜索范围</h1><p><strong>能不能出漏洞取决于信息收集的程度（信息收集就是把已知的信息由一变多）</strong></p>
+<p>1.有哪些根域</p>
+<p>2.分别有什么子域名</p>
+<p>3.公司结构拓扑</p>
+<p>4.xxx.com （IP）</p>
+<p>5.子域名（IP）</p>
+<p>6.敏感信息：API接口，路径，住址，电话，通信软件（api是具有一定功能的网站路径，根据你的需求给你推荐什么样的东西 ，里面的东西是已经存储好的比如：图片）</p>
+<p>7.所有网站的指纹（网站使用了什么框架，拿到指纹，可以快速定位网站有哪些漏洞）</p>
+<p>8.测试网站是否具有漏洞poc（对系统危害小），exp（会对系统造成危害）</p>
+<p><strong>可能遇到的问题</strong></p>
+<p>主域名不好查 可以通过爆破子域名（爆破得到多IP的情况可能是cdn 一个IP有多个域名可能是泛解析）</p>
+<p>注：cdn相当中介 中转的一个功能 会存储一些常规的资源放在里面  让用户更快速得到想要的数据</p>
+<p>如何分辨使用了泛解析：</p>
+<p>1.nslookup能解析多个IP </p>
+<p>2.站长工具 </p>
+<p>3.ping命令也会显示（访问ip地址 可以直接找到目标 但访问域名可以找到的是cdn服务器）</p>
+<p>绕过cdn的方法：<br>1.ping  可能只支持域名访问 不支持IP访问<br>2.nslookup     ns..+域名+114.114.114.114（举例）<br>3.网络空间引擎<br>4.使用ssl证书寻找真实IP（作用不大）<a target="_blank" rel="noopener" href="https://crt.sh/">https://crt.sh/</a></p>
 
       
     </div>
