@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>DDOS、CC攻击的防御策略 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+  
+  <meta name="description" content="DDoS可以说在互联网界大名鼎鼎，也可以直言说是臭名昭著，随着DDoS攻击的范围越来越广泛，网站的安全也就变得更加重要。我们在预防DDoS攻击前，可以先来了解一下DDoS，还有DDoS的常见攻击方式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DDOS、CC攻击的防御策略">
+<meta property="og:url" content="http://example.com/2023/08/11/%E6%8A%B5%E5%BE%A1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="DDoS可以说在互联网界大名鼎鼎，也可以直言说是臭名昭著，随着DDoS攻击的范围越来越广泛，网站的安全也就变得更加重要。我们在预防DDoS攻击前，可以先来了解一下DDoS，还有DDoS的常见攻击方式。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-08-10T16:14:00.000Z">
+<meta property="article:modified_time" content="2023-08-10T18:05:48.046Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary"><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+  <h1 id="title">
+    <a href="/">Hexo</a>
+  </h1>
+  <nav>
+    
+    
+      
+      <a class="nav-link" href="/">Home</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/archives">Archives</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/">GitHub</a>
+    
+    
+  </nav>
+</header>
+
+    <div id="content">
+      <article id="post-抵御" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h2 class="article-title" itemprop="headline name">
+      DDOS、CC攻击的防御策略
+    </h2>
+  
+
+
+        <div class="article-meta">
+          <time class="article-date" datetime="2023-08-10T16:14:00.000Z" itemprop="datePublished">August 11, 2023, 12:14 AM</time>
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        <p>DDoS可以说在互联网界大名鼎鼎，也可以直言说是臭名昭著，随着DDoS攻击的范围越来越广泛，网站的安全也就变得更加重要。我们在预防DDoS攻击前，可以先来了解一下DDoS，还有DDoS的常见攻击方式。</p>
+<span id="more"></span>`
+
+<h1 id="关于DDoS攻击"><a href="#关于DDoS攻击" class="headerlink" title="关于DDoS攻击"></a>关于DDoS攻击</h1><p>DDoS，即分布式拒绝服务，那这分布式拒绝服务具体是什么意思？广义上来讲一切能够导致合法用户不能正常访问网络服务的行为都是拒绝服务攻击，而DDoS主要是通过大量合法请求占用大量资源，导致服务器瘫痪，使正常用户无法访问。DDoS攻击迅猛，来势汹汹，一旦实施就如洪水般涌向受害服务器，所以也被称作“洪水攻击”。</p>
+<p>黑客为什么选择DDoS 不同于其他恶意篡改数据或劫持类攻击，DDoS简单粗暴，可以达到直接摧毁目标的目的。另外，相对其他攻击手段DDoS的技术要求和发动攻击的成本很低，只需要购买部分服务器权限或控制一批肉鸡即可，而且攻击相应速度很快，攻击效果可视。另一方面，DDoS具有攻击易防守难的特征，服务提供商为了保证正常客户的需求需要耗费大量的资源才能和攻击发起方进行对抗。这些特点使得DDoS成为黑客们手中的一把很好使的利剑，而且所向霹雳。 从另一个方面看，DDoS虽然可以侵蚀带宽或资源，迫使服务中断，但这远远不是黑客的正真目的。所谓没有买卖就没有杀害，DDoS只是黑客手中的一枚核武器，他们的目的要么是敲诈勒索、要么是商业竞争、要么是要表达政治立场。在这种黑色利益的驱使下，越来越多的人参与到这个行业并对攻击手段进行改进升级，致使DDoS在互联网行业愈演愈烈，并成为全球范围内无法攻克的一个顽疾。</p>
+<p>DDoS的攻击方式 一种服务需要面向大众就需要提供用户访问接口，这些接口恰恰就给了黑客有可乘之机，如：可以利用TCP&#x2F;IP协议握手缺陷消耗服务端的链接资源，可以利用UDP协议无状态的机制伪造大量的UDP数据包阻塞通信信道……可以说，互联网的世界自诞生之日起就不缺乏被DDoS利用的攻击点，从TCP&#x2F;IP协议机制到CC、DNS、NTP反射类攻击，更有甚者利用各种应用漏洞发起更高级更精确的攻击。</p>
+<p>如何防止ddos攻击?DDoS攻击是利用一批受控制的机器向一台机器发起攻击，这样来势迅猛的攻击令人难以防备，因此具有较大的破坏性。如果说以前网络管理员对抗Dos可以采取过滤IP地址方法的话，那么面对当前DDoS众多伪造出来的地址则显得没有办法。所以说防范DDoS攻击变得更加困难，如何采取措施有效的应对呢?下面我们从两个方面进行介绍。</p>
+<h2 id="一、寻找机会应对攻击"><a href="#一、寻找机会应对攻击" class="headerlink" title="一、寻找机会应对攻击"></a>一、寻找机会应对攻击</h2><p>　　如果用户正在遭受攻击，他所能做的抵御工作将是非常有限的。因为在原本没有准备好的情况下有大流量的灾难性攻击冲向用户，很可能在用户还没回过神之际，网络已经瘫痪。但是，用户还是可以抓住机会寻求一线希望的。<br> 　检查攻击来源，通常黑客会通过很多假IP地址发起攻击，此时，用户若能够分辨出哪些是真IP哪些是假IP地址，然后了解这些IP来自哪些网段，再找网网管理员将这些机器关闭，从而在第一时间消除攻击。如果发现这些IP地址是来自外面的而不是公司内部的IP的话，可以采取临时过滤的方法，将这些IP地址在服务器或路由器上过滤掉。<br>　找出攻击者所经过的路由，把攻击屏蔽掉。若黑客从某些端口发动攻击，用户可把这些端口屏蔽掉，以阻止入侵。不过此方法对于公司网络出口只有一个，而又遭受到来自外部的DDoS攻击时不太奏效，毕竟将出口端口封闭后所有计算机都无法访问internet了。<br>　最后还有一种比较折中的方法是在路由器上滤掉ICMP。虽然在攻击时他无法完全消除入侵，但是过滤掉ICMP后可以有效的防止攻击规模的升级，也可以在一定程度上降低攻击的级别。</p>
+<h2 id="二、预防为主保证安全"><a href="#二、预防为主保证安全" class="headerlink" title="二、预防为主保证安全"></a>二、预防为主保证安全</h2><p>　　DDoS攻击是黑客最常用的攻击手段，下面列出了对付它的一些常规方法。</p>
+<p>​        <strong>1.过滤所有RFC1918 IP地址</strong></p>
+<p> 　　RFC1918 IP地址是内部网的IP地址，像10.0.0.0、192.168.0.0和172.16.0.0，它们不是某个网段的固定的IP地址，而是Internet内部保留的区域性IP地址，应该把它们过滤掉。此方法并不是过滤内部员工的访问，而是将攻击时伪造的大量虚假内部IP过滤，这样也可以减轻DDoS的攻击。</p>
+<p>​    <strong>2.用足够的机器承受黑客攻击</strong></p>
+<p> 　　这是一种较为理想的应对策略。如果用户拥有足够的容量和足够的资源给黑客攻击，在&gt;它不断访问用户、夺取用户资源之时，自己的能量也在逐渐耗失，或许未等用户被攻死，黑客&gt;已无力支招儿了。不过此方法需要投入的资金比较多，平时大多数设备处于空闲状态，和目前&gt;中小企业网络实际运行情况不相符。</p>
+<p>​    <strong>3.充分利用网络设备保护网络资源</strong></p>
+<p> 　　所谓网络设备是指路由器、防火墙等负载均衡设备，它们可将网络有效地保护起来。当&gt;网络被攻击时最先死掉的是路由器，但其他机器没有死。死掉的路由器经重启后会恢复正常，&gt;而且启动起来还很快，没有什么损失。若其他服务器死掉，其中的数据会丢失，而且重启服务&gt;器又是一个漫长的过程。特别是一个公司使用了负载均衡设备，这样当一台路由器被攻击死机&gt;时，另一台将马上工作。从而最大程度的削减了DDoS的攻击。</p>
+<p>​    <strong>4.在骨干节点配置防火墙</strong></p>
+<p>　　防火墙本身能抵御DDoS攻击和其他一些攻击。在发现受到攻击的时候，可以将攻击导向&gt;一些牺牲主机，这样可以保护真正的主机不被攻击。当然导向的这些牺牲主机可以选择不重要&gt;的，或者是linux以及unix等漏洞少和天生防范攻击优秀的系统。</p>
+<p>​    <strong>5.过滤不必要的服务和端口</strong></p>
+<p>　　可以使用Inexpress、Express、Forwarding等工具来过滤不必要的服务和端口，即在路由器上过滤假IP。比如Cisco公司的CEF可以针对封包Source IP和Routing Table做比较，并加以过滤。只开放服务端口成为目前很多服务器的流行做法，例如WWW服务器那么只开放80而将其他所有端口关闭或在防火墙上做阻止策略。</p>
+<p> ​    <strong>6.限制SYN&#x2F;ICMP流量</strong></p>
+<p> 　　用户应在路由器上配置SYN&#x2F;ICMP的最大流量来限制SYN&#x2F;ICMP封包所能占有的最高频宽，这样，当出现大量的超过所限定的SYN&#x2F;ICMP流量时，说明不是正常的网络访问，而是有黑客入侵。早期通过限制SYN&#x2F;ICMP流量是最好的防范DOS的方法，虽然目前该方法对于DDoS效果不太明显了，不过仍然能够起到一定的作用。</p>
+<p>​    <strong>7.定期扫描</strong></p>
+<p> 　　要定期扫描现有的网络主节点，清查可能存在的安全漏洞，对新出现的漏洞及时进行清理。骨干节点的计算机因为具有较高的带宽，是黑客利用的最佳位置，因此对这些主机本身加强主机安全是非常重要的。而且连接到网络主节点的都是服务器级别的计算机，所以定期扫描漏洞就变得更加重要了。</p>
+<p>​     <strong>8.检查访问者的来源</strong></p>
+<p> 　　使用Unicast Reverse Path Forwarding等通过反向路由器查询的方法检查访问者的IP地址是否是真，如果是假的，它将予以屏蔽。许多黑客攻击常采用假IP地址方式迷惑用户，很难查出它来自何处。因此，利用Unicast Reverse Path Forwarding可减少假IP地址的出现，有助于提高网络安全性。</p>
+<h1 id="抵御CC攻击"><a href="#抵御CC攻击" class="headerlink" title="抵御CC攻击"></a>抵御CC攻击</h1><p>  <strong>一、防御CC攻击，提升网站安全性能</strong> </p>
+<p>1、使用高性能防火墙：在部署网站时，选择具备防御CC攻击能力的高性能防火墙是首要之选。通过对流量的检测和过滤，可以抵御大量的请求洪流，有效阻断CC攻击。<br>2、设置访问频率限制：合理设置网站的访问频率限制，限制来自同一IP地址的访问次数，遏制恶意访问和CC攻击。<br>3、启用验证码机制：在登录、注册、重置密码等重要操作时，引入验证码机制，有效杜绝CC攻击中的暴力破解行为。</p>
+<p><strong>二、应急响应，迅速发现并应对CC攻击</strong></p>
+<p>1、监控网站流量：通过监控网站的访问日志和流量数据，及时发现异常请求和流量峰值，判断是否遭受CC攻击。<br>2、分析攻击流量特征：对于识别到的CC攻击流量，可以通过网络流量分析工具对其进行详细分析，从而了解攻击源、攻击方式和攻击强度等信息。<br>3、进行源IP封堵：根据攻击流量分析结果，可以及时将攻击源的IP地址加入黑名单，实现对攻击者的封堵，从而降低CC攻击对网站的影响。</p>
+<p> <strong>三、恢复网站，重建业务流程</strong></p>
+<p>1、停止CC攻击：当网站遭受CC攻击时，首先应采取措施迅速停止攻击。可以通过联系云服务提供商或网络安全公司，利用其专业技术和设备来协助停止攻击。<br>2、修复漏洞，升级系统：CC攻击常常利用网站的漏洞进行攻击，因此，在恢复网站前，需要先进行系统修复和升级，确保网站的安全性能。<br>3、从备份中重建网站：如果网站被CC攻击导致数据损坏或丢失，可以通过网站的备份文件来恢复数据，并重新搭建网站。<br> 4、更新安全策略和应急预案：经历一次CC攻击后，应审视网站的安全策略和应急预案，发现并解决潜在的安全漏洞，提升整体的安全能力。</p>
+<p> 面对CC攻击，保护网站的安全性和可用性是至关重要的。通过采取防御措施、及时应急响应和恢复网站等措施，我们可以有效应对CC攻击，并降低对网站造成的影响。然而，在实际操作中，应该根据自身情况制定具体的安全防御策略，并与专业的网络安全公司合作，以更好地保障网站的稳定运营！</p>
+
+      
+    </div>
+    
+    
+    
+  </div>
+</article>
+
+  
+<nav id="article-nav" class="article-nav">
+  
+    <span id="article-nav-newer" class="article-nav-link-wrap newer"></span>
+  
+  
+    <a href="/2023/08/04/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">
+        
+          操作系统的常用命令
+        
+      </div>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+    </div>
+  </div>
+  
+
+
+
+
+<div id="settings-container">
+  <div id="dark-mode">dark</div>
+  <div id="sans-font">sans</div>
+</div>
+<script type="text/javascript">
+let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+</script>
+
+
+
+
+</body>
+</html>
