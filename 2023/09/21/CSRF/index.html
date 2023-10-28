@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+  
+  <meta name="description" content="CSRF一、什么是CSRF​		CSRF（跨站请求伪造）也被称为客户端请求伪造，通常缩写为CSRF或者XSRF，它是以一种对网站的恶意利用。听起来有点像XSS（跨站脚本），但它与XSS非常不同，XSS利用站点内的信任用户，而CSRF则通过伪装成受信任用户请求受信任的网站。 ​		简言之，就是攻击者通过一些技术手段欺骗用户的浏览器去访问一个受害则之前认证过的站点并运行一些操作（发邮件、发消息、甚至可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2023/09/21/CSRF/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="CSRF一、什么是CSRF​		CSRF（跨站请求伪造）也被称为客户端请求伪造，通常缩写为CSRF或者XSRF，它是以一种对网站的恶意利用。听起来有点像XSS（跨站脚本），但它与XSS非常不同，XSS利用站点内的信任用户，而CSRF则通过伪装成受信任用户请求受信任的网站。 ​		简言之，就是攻击者通过一些技术手段欺骗用户的浏览器去访问一个受害则之前认证过的站点并运行一些操作（发邮件、发消息、甚至可">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/CSRF.assets/image-20230921134900043.png">
+<meta property="article:published_time" content="2023-09-21T05:19:22.332Z">
+<meta property="article:modified_time" content="2023-09-21T14:00:13.468Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/CSRF.assets/image-20230921134900043.png"><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+  <h1 id="title">
+    <a href="/">Hexo</a>
+  </h1>
+  <nav>
+    
+    
+      
+      <a class="nav-link" href="/">Home</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/archives">Archives</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/">GitHub</a>
+    
+    
+  </nav>
+</header>
+
+    <div id="content">
+      <article id="post-CSRF" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        <h1 id="CSRF"><a href="#CSRF" class="headerlink" title="CSRF"></a>CSRF</h1><h3 id="一、什么是CSRF"><a href="#一、什么是CSRF" class="headerlink" title="一、什么是CSRF"></a>一、什么是CSRF</h3><p>​		CSRF（跨站请求伪造）也被称为客户端请求伪造，通常缩写为CSRF或者XSRF，它是以一种对网站的恶意利用。听起来有点像XSS（跨站脚本），但它与XSS非常不同，XSS利用站点内的信任用户，而CSRF则通过伪装成受信任用户请求受信任的网站。</p>
+<p>​		简言之，就是攻击者通过一些技术手段欺骗用户的浏览器去访问一个受害则之前认证过的站点并运行一些操作（发邮件、发消息、甚至可以是财产操作（比如转账或者购买商品））。因为浏览器在之前已经对受害者认证过，所以被访问站点会觉得这是真正的用户在进行操作而去运行。</p>
+<h3 id="二、CSRF攻击原理及过程"><a href="#二、CSRF攻击原理及过程" class="headerlink" title="二、CSRF攻击原理及过程"></a>二、CSRF攻击原理及过程</h3><p>​		CSRF能攻击成功的本质原因就是重要的所有参数都是可以被攻击者猜测到的。攻击者只有猜测出URL的所有参数和参数值，就能构造出一个伪造的请求；反之，攻击者将无法攻击成功。</p>
+<p><img src="/CSRF.assets/image-20230921134900043.png" alt="image-20230921134900043"></p>
+<p>从上图流程可得知，要完整的进行一次CSRF攻击，受害者必须依次完成其中两个步骤：</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.登入受信任站点A，并在本地生成cookie</span><br><span class="line">2.在不登出A的情况下去访问危急站点B</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>1.受害者通过账号密码登录并访问网站A</p>
+<p>2.网站A 验证受害者的账号密码，并生成一个sessionID，然后返回到客户端并存储在浏览器中</p>
+<p>3.随后该受害者访问由hacked控制的网站B</p>
+<p>4.网站B自动触发要求受害者端访问网站A（在网站B中有链接指向网站A）</p>
+<p>5.受害者通过网站B中的链接去访问网站A（此时受害者携带合法的sessionID进行访问网站A）</p>
+<p>5.网站A只需验证sessionID是否合法，合法则执行相应的操作（具体操作得看链接，以及网站B要求访问时携带的数据）</p>
+<p>所以在被CSRF攻击时，要同时必须满足两个条件：</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">登入受信任的网站A,并在本地生成cookie。</span><br><span class="line">在登出A的情况下，访问危险网站B</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="三、CSRF分类"><a href="#三、CSRF分类" class="headerlink" title="三、CSRF分类"></a>三、CSRF分类</h3><p>​		CSRF，跟XSS漏洞攻击一样，存在着很大的危害性。可以理解成攻击者盗用了你的身份，再以你的名义发送恶意请求，对服务器来说这个请求完全时合法的，但是却完成了攻击者所期望的一个操作。比如以你的名义去发送邮件、发消息、盗取你的账号、添加系统管理员，甚至是购买商品、虚拟货币转账等等</p>
+<h4 id="1、GET型CSRF"><a href="#1、GET型CSRF" class="headerlink" title="1、GET型CSRF"></a>1、GET型CSRF</h4><p>​		仅仅需要一个HTTP请求，就能构造一次简单的CSRF</p>
+<p>例子：</p>
+<p>银行站点A：它以GET请求来完成一个银行转账的操作，如：</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.mybank.com/Transfer.php?toBankId=11&amp;money=1000 </span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>危险站点B：它里面有一段HTML的代码：</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=http://www.mybank.com/Transfer.php?toBankId=11&amp;money=1000&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>首先在你登录了银行站点A，然后再去访问危险站点B，这时你会发现你的银行账户少了一千大米</p>
+<p>原因是银行站点违反了HTTP规范，使用了GET请求更新资源</p>
+<p>在访问危险站点B之前，你已经登录了银行站点A，而B中的一个合法请求（这里被攻击者所利用）</p>
+<p>所有你的浏览器会带着你的银行站点A的cookie发出GET请求，去获取资源以GET的方式请求第三方资源（这里的第三方指银行站点）</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.mybank.com/Transfer.php?toBankId=11&amp;money=1000</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>银行站点服务器受到请求后，觉得这是一个更新资源的操作（转账操作），所有就立马执行了转账操作。</p>
+<h4 id="2、POST型CSRF"><a href="#2、POST型CSRF" class="headerlink" title="2、POST型CSRF"></a>2、POST型CSRF</h4><p>​		在CSRF攻击之初，曾经有一种错误的观点，认为CSRF攻击只能由GET请求发起。因此很多开发者认为只要把重要的操作改成只允许POST请求，就能防止CSRF攻击。</p>
+<p>​		这样的错误观点形成的原因主要在于，大多数CSRF攻击发起时，使用的HTML标签都是<image>、<iframe>、<sceipt>等带有”src”属性的标签，这类标签只能发起一次GET请求，而不能发起POST请求。</p>
+<p>​		而对于很多网站的应用来说，一些重要的操作并未严格的区分GET和POST，攻击者可以使用GET请求表单的提交地址。比如在PHP中，如果使用的时$_REQUEST， 而非$POST获取变量，则会存在这个问题。</p>
+<p>​		对于一个表单来说，用户往往也就使用GET方式提交参数</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=&quot; / register&quot; id=&quot;register&quot; method=&quot;post&quot; &gt;</span><br><span class="line">&lt;input type=text name=&quot;username&quot; value=&quot;&quot; /&gt;</span><br><span class="line">&lt;input type=password name=&quot;password&quot; value=&quot;&quot; /&gt;</span><br><span class="line">&lt;input type=submit name=&quot;submit&quot; value=&quot;submit&quot; /&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>用户可以尝试构造一个GET请求</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http: //host/register?username=test&amp;password=passwd</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>若服务器端未对请求方法进行限制，则这个请求会通过。</p>
+<p>如果服务端区分了GET和POST，攻击者有若干种方法可以构造出一个POST请求</p>
+<p>最简单的方法就是在一个页面种构造好一个表单，然后使用JavaScript自动提交这个表单</p>
+<p>例子：</p>
+<p>在普通用户眼中，点击网页-&gt;打开试看视频-&gt;购买视频是一个很正常的一个流程。在攻击者的眼中可以算正常但又不正常的，不正常的情况下，是在开发者安全意识不足所造成的。攻击者在购买处抓到购买时网站处理购买用户余额的地址。比如</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/coures/user/handler666buy.php&lt;/font&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>通过提交表单，bug.php处理购买的信息，666为视频ID。那么攻击者现在构造一个链接，链接包含以下内容</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=/coures/user/handler/666/buy method=POST&gt;</span><br><span class="line">&lt;input type=&quot;text&quot; name=&quot;xx&quot; value=&quot;xx&quot; /&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;script&gt; document.forms[0].submit(); &lt;/script&gt; </span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>当用户访问该页面后，表单会自动提交，相当于模拟用户完成了一次POST操作，自动购买了ID为666的视频，从而导致受害者余额扣除</p>
+<h4 id="四、CSRF漏洞挖掘"><a href="#四、CSRF漏洞挖掘" class="headerlink" title="四、CSRF漏洞挖掘"></a>四、CSRF漏洞挖掘</h4><p>1.最简单的方法就是抓取一个正常请求的数据包，如果没有Referer字段和token，那么极有可能存在CSRF漏洞</p>
+<p>2.如果有Referer字段，但是去掉Referer字段后再重新提交，如果该提交还有效，那么基本上可以确定存在CSRF漏洞</p>
+<p>3.随着CSRF漏洞研究的不断深入，不断涌现出一些专门针对CSRF漏洞进行检测的工具，如：CSRFTester、CSRF Request Builder等。以CSRFTester工具为例，CSRF漏洞检测工具的测试原理如下：</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">使用CSRFTester进行测试时，首先需要抓取我们在浏览器中访问过的所有链接以及所有表单等信息，然后通过在CSRFTester中修改相应的表单等信息，重新提交，这就相当于一次伪造客户端请求</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>如果修改后的测试请求成功被网站服务器接受，则说明存在CSRF漏洞。</p>
+<h4 id="五、CSRF漏洞的防御"><a href="#五、CSRF漏洞的防御" class="headerlink" title="五、CSRF漏洞的防御"></a>五、CSRF漏洞的防御</h4><ol>
+<li><p><strong>验证码</strong></p>
+<p><strong>验证码被认为是对抗CSRF攻击最简洁而有效的防御方法。</strong></p>
+<p>CSRF攻击的过程，往往是用户在不知情的情况下构造了网络请求。验证码的存在强制用户必须与应用进行交互，才能完成最终请求。因此在通常情况下，验证码能够很好地遏制CSRF攻击</p>
+<p>但是验证码并非万能。很多时候，出于用户体验考虑，网站不能给所有的操作都加上验证码。因此验证码只能作为防御CSRF的一种辅助手段，而不能作为最主要的解决方案。</p>
+</li>
+<li><p><strong>在请求地址中添加token并验证</strong></p>
+<p>CDRF攻击之所以能够成功，是因为攻击者可以完全伪造用户的请求，该请求中所有的用户验证信息都是存在与cookie中，因此攻击者可以在不知道这些验证信息的情况下直接利用用户自己的cookie来通过安全验证。</p>
+<p>要抵御CSRF关键在于请求中放入攻击者不能伪造的信息，并且该信息不存在与cookie之中</p>
+<p><strong>可以在HTTP请求中以参数的形式加入一个随机产生的token，并在服务器建立以恶搞拦截器来验证token，如果请求中没有token或者token内容不正确，则认为可能是CSRF攻击而拒绝该请求。</strong></p>
+<p>对于GET请求，token将附在请求地址之后，这样URL就变成<a target="_blank" rel="noopener" href="http://url/?csrftoken=tokenvalue%E8%80%8C%E5%AF%B9%E4%BA%8EPOST%E8%AF%B7%E6%B1%82%E6%9D%A5%E8%AF%B4%EF%BC%8C%E8%A6%81%E5%9C%A8form%E7%9A%84%E6%9C%80%E5%90%8E%E5%8A%A0%E4%B8%8A%EF%BC%8C%E8%BF%99%E6%A0%B7%E5%B0%B1%E6%8A%8Atoken%E4%BB%A5%E5%8F%82%E6%95%B0%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%8A%A0%E5%85%A5%E4%BA%86%E8%AF%B7%E6%B1%82%E3%80%82">http://url?csrftoken=tokenvalue而对于POST请求来说，要在form的最后加上，这样就把token以参数的形式加入了请求。</a></p>
+<p>但是，在一个网络中，可以接受请求的地方有很多，要对于每一个请求都加上token非常的麻烦，并且容易漏掉，通常使用的方法就是在每次页面加载时使用JavaScript遍历整个dom树，对于dom中所有的a和form标签后加入token。</p>
+<p>这样就可以解决大部分的请求，但是对于在页面加载之后动态生成的html代码，这种方法就没有了作用，还需要程序员在编码时手动添加token。</p>
+<p>该方法还有一个缺点就是难以保证token本身的安全。特别是在一些论坛之类支持用户自己发表内容的网站，攻击者可以在上面发布自己个人网站的地址。由于系统也会在这个地址后面加上token，攻击者可以在自己的网站上得到这个token，并马上就可以发动CSRF攻击。</p>
+<p><strong>为了避免这一点，系统可以在添加token的时候增加一个判断，如果这个链接是链到增加本站的，就在后面添加token，如果是通向外网则不加。</strong></p>
+<p>不过，即使这个CSRFtoken不以参数的形式附加在请求之中，攻击者的网站也同样可以通过Referer来得到这个token值来发动CSRF攻击。这也是一些用户喜欢手动关闭浏览器Referer功能的原因。</p>
+</li>
+<li><p><strong>在HTTP头中自定义属性并验证</strong></p>
+<p>这种方法也是使用token并进行验证，和上一种方法不同的是，这里并不是把token以参数的形式至于HTTP请求之中，而是把它放到HTTP头中自定义的属性里。通过XMLhttpRequest这个类，可以一次性给所有该类请求加上CSRFtoken这个HTTP头属性，并把token值放入其中。</p>
+<p>这样解决了上种方法在请求中加入token的不便，同时通过XMLhttpRequest请求的地址不会被记录到浏览器的地址栏，也不用担心token会透过Referer泄露到其他网站中。</p>
+</li>
+<li><p><strong>验证HTTP Referer字段</strong></p>
+<p>根据 HTTP 协议，在 HTTP 头中有一个字段叫Referer，它记录了该 HTTP 请求的来源地址。在通常情况下，访问一个安全受限页面的请求来自于同一个网站，比如需要访问 ：</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://bank.example/withdraw?account=bob&amp;amount=1000000&amp;for=Mallory</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>用户必须先登陆 bank.example，然后通过点击页面上的按钮来触发转账事件。</p>
+<p>这时，该转帐请求的 Referer 值就会是转账按钮所在的页面的 URL，通常是以 bank.example 域名开头的地址。而如果黑客要对银行网站实施 CSRF 攻击，他只能在他自己的网站构造请求，当用户通过黑客的网站发送请求到银行时，该请求的 Referer 是指向黑客自己的网站。</p>
+<p><strong>因此，要防御 CSRF 攻击，银行网站只需要对于每一个转账请求验证其 Referer 值，如果是以 bank.example 开头的域名，则说明该请求是来自银行网站自己的请求，是合法的。如果 Referer 是其他网站的话，则有可能是黑客的 CSRF 攻击，拒绝该请求。</strong></p>
+<p>这种方法的显而易见的好处就是简单易行，网站的普通开发人员不需要操心 CSRF 的漏洞，只需要在最后给所有安全敏感的请求统一增加一个拦截器来检查 Referer 的值就可以。特别是对于当前现有的系统，不需要改变当前系统的任何已有代码和逻辑，没有风险，非常便捷。</p>
+<p><strong>然而，这种方法并非万无一失。Referer 的值是由浏览器提供的，虽然 HTTP 协议上有明确的要求，但是每个浏览器对于 Referer 的具体实现可能有差别，并不能保证浏览器自身没有安全漏洞。</strong></p>
+<p>使用验证 Referer 值的方法，就是把安全性都依赖于第三方（即浏览器）来保障，从理论上来讲，这样并不安全。</p>
+<p>事实上，对于某些浏览器，比如 IE6 或 FF2，目前已经有一些方法可以篡改 Referer 值。如果 bank.example 网站支持 IE6 浏览器，黑客完全可以把用户浏览器的 Referer 值设为以 bank.example 域名开头的地址，这样就可以通过验证，从而进行 CSRF 攻击。</p>
+<p><strong>即便是使用最新的浏览器，黑客无法篡改 Referer 值，这种方法仍然有问题。因为 Referer 值会记录下用户的访问来源，有些用户认为这样会侵犯到他们自己的隐私权，特别是有些组织担心 Referer 值会把组织内网中的某些信息泄露到外网中。</strong></p>
+<p>因此，用户自己可以设置浏览器使其在发送请求时不再提供 Referer。当他们正常访问银行网站时，网站会因为请求没有 Referer 值而认为是 CSRF 攻击，拒绝合法用户的访问。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>CSRF攻击是攻击者利用用户的身份操作用户账户的一种攻击方式。设计CSRF的防御方案必须先理解CSRF攻击的原理和本质。我们通常使用Anti CSRF Token来防御CSRF攻击，在使用Token时，要注意Token的保密性和随机性。</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+  </div>
+</article>
+
+  
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/2023/09/21/Webshell%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E7%9A%84%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/09/19/XXE/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">
+        
+      </div>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+    </div>
+  </div>
+  
+
+
+
+
+<div id="settings-container">
+  <div id="dark-mode">dark</div>
+  <div id="sans-font">sans</div>
+</div>
+<script type="text/javascript">
+let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+</script>
+
+
+
+
+</body>
+</html>

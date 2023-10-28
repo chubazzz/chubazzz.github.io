@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+  
+  <meta name="description" content="Webshell管理工具的流量特征分析一、Webshell管理工具菜刀、蚁剑、冰蝎（2.0、3.0、4.0）、哥斯拉 简单的来说，菜刀和蚁剑采用静态加密的方式，其流量的攻击特征较为明显，而冰蝎和哥斯拉采用了动态加密的方式，更容易绕过安全设备的检测。 1.菜刀 1231.payload在请求体中，采用url编码+base64编码，payload部分是明文传输2.payload中有eval或asser">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2023/09/21/Webshell%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E7%9A%84%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Webshell管理工具的流量特征分析一、Webshell管理工具菜刀、蚁剑、冰蝎（2.0、3.0、4.0）、哥斯拉 简单的来说，菜刀和蚁剑采用静态加密的方式，其流量的攻击特征较为明显，而冰蝎和哥斯拉采用了动态加密的方式，更容易绕过安全设备的检测。 1.菜刀 1231.payload在请求体中，采用url编码+base64编码，payload部分是明文传输2.payload中有eval或asser">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-09-21T14:34:02.782Z">
+<meta property="article:modified_time" content="2023-09-21T14:43:16.058Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary"><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+  <h1 id="title">
+    <a href="/">Hexo</a>
+  </h1>
+  <nav>
+    
+    
+      
+      <a class="nav-link" href="/">Home</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/archives">Archives</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/">GitHub</a>
+    
+    
+  </nav>
+</header>
+
+    <div id="content">
+      <article id="post-Webshell管理工具的流量特征" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        <h2 id="Webshell管理工具的流量特征分析"><a href="#Webshell管理工具的流量特征分析" class="headerlink" title="Webshell管理工具的流量特征分析"></a>Webshell管理工具的流量特征分析</h2><h3 id="一、Webshell管理工具"><a href="#一、Webshell管理工具" class="headerlink" title="一、Webshell管理工具"></a>一、Webshell管理工具</h3><p>菜刀、蚁剑、冰蝎（2.0、3.0、4.0）、哥斯拉</p>
+<p>简单的来说，<strong>菜刀和蚁剑采用静态加密</strong>的方式，其流量的攻击特征较为明显，而<strong>冰蝎和哥斯拉采用了动态加密</strong>的方式，更容易绕过安全设备的检测。</p>
+<h4 id="1-菜刀"><a href="#1-菜刀" class="headerlink" title="1.菜刀"></a>1.菜刀</h4><blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.payload在请求体中，采用url编码+base64编码，payload部分是明文传输</span><br><span class="line">2.payload中有eval或assert、base64_decode这样的字符</span><br><span class="line">3.payload中有默认固定的&amp;z0=QGluaV9zZXQ...这样base64加密的攻击载荷，参数z0对应$_POST[z0]接收到的数据，且固定为QGluaV9zZXQ开头。进行base64解码后可看到代码：@ini_set(&quot;display_errors&quot;,&quot;0&quot;);@set_time_limit(0);@set_magic_quotes_runtime(0);这段意思是首先关闭报错和magic_quotes，接下来去获取主机的信息。</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="2-蚁剑"><a href="#2-蚁剑" class="headerlink" title="2.蚁剑"></a>2.蚁剑</h4><blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.请求时可选择多种编码器，如果采用默认的方式，则仅进行url编码。</span><br><span class="line">2.进行连接时会进行两次请求，第一次请求的payload和菜刀相似，也是@ini_set(&quot;display_errors&quot;,&quot;0&quot;);@set_time_limit(0);@set_magic_quotes_runtime(0);意思是关闭报错和magic_quotes，接下来区获取主机信息。这段代码基本是所有WebShell客户端链接PHP类WebShell都有的一种代码。</span><br><span class="line">3.第二次请求会把主机的目录列出来。</span><br><span class="line">4.由于蚁剑中包含了很多加密、绕过插件，所以导致很多流量被加密后无法识别，但是蚁剑混淆加密后还有一个比较明显的特征，即为参数名大多以“_0x.....=”这种形式（下划线可替换为其他）所以，以_0x开头的参数名，后面为加密数据的数据包也可识别为蚁剑的流量特征。</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="3-冰蝎"><a href="#3-冰蝎" class="headerlink" title="3.冰蝎"></a>3.冰蝎</h4><p><strong>冰蝎2.0</strong></p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">使用 AES加密+base64编码发起三次请求。</span><br><span class="line">第一次GET请求服务端产生密钥写入 session，session 和当前会话绑定，不同的客户端的密钥也是不同的。第二次GET请求是为了获取密钥 key，服务端会生成16位的AES密钥。第三次使用 key 的AES加密进行通信，通信也采用了base64编码。</span><br><span class="line">进行请求时内置了十几个User-Agent头，每次请求时会随机选择其中的一个。因此当发现一个ip的请求头中的user-agent在频繁变换，就可能是冰蝎。</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><strong>冰蝎3.0</strong></p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">使用AES加密+base64编码发起两次请求。 </span><br><span class="line">与冰蝎2.0相比，冰蝎3.0取消了动态密钥获取的请求，AES的密钥直接固定为连接密码32位md5的前16位，默认连接密码是&quot;rebeyond&quot;(即密钥是md5(&#x27;rebeyond&#x27;)[0:16]=e45e329feb5d925b)。服务端和客户端不再进行密钥的交互传递。两次请求中，第一次请求用于判断是否可以建立连接。第二次发送 phpinfo 等代码执行，获取网站的信息。</span><br><span class="line">与冰蝎2.0相似，进行请求时内置了十几个User-Agent头，每次请求时会随机选择其中的一个。连接jsp的webshell的请求数据包中的content-type字段常见为application/octet-stream。</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><strong>冰蝎4.0</strong></p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1.提供了传输协议自定义的功能，让用户对流量的加密和解密进行自定义，实现流量加解密协议的去中心化。v4.0版本不再有连接密码的概念，自定义传输协议的算法就是连接密码。</span><br><span class="line">2.Accept字段（弱特征），通常是Accept: application/json, text/javascript, */*; q=0.01 意思是浏览器可接受任何文件，但最倾向application/json 和 text/javascript。</span><br><span class="line">3.Content-Type字段（弱特征），通常是Content-type: Application/x-www-form-urlencoded</span><br><span class="line">4.与冰蝎的前述版本相似，进行请求时内置了十几个User-Agent头，每次请求时会随机选择其中的一个。</span><br><span class="line">5.连接的端口有一定的特征，冰蝎与webshell建立连接的同时，javaw也与目的主机建立tcp连接，每次连接使用本地端口在49700左右(就是比较大的端口)，每连接一次，每建立一次新的连接，端口就依次增加。</span><br><span class="line">6.使用长连接，避免了频繁的握手造成的资源开销。默认情况下，请求头和响应头里会带有 Connection：Keep-Alive</span><br><span class="line">7.有固定的请求头和响应头，请求字节头：dFAXQV1LORcHRQtLRlwMAhwFTAg/M ，响应字节头：TxcWR1NNExZAD0ZaAWMIPAZjH1BFBFtHThcJSlUXWEd</span><br><span class="line">8.默认时，冰蝎 webshell都有“e45e329feb5d925b” 一串密钥，与冰蝎3.0相同。</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="4-哥斯拉"><a href="#4-哥斯拉" class="headerlink" title="4.哥斯拉"></a>4.哥斯拉</h4><blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1.支持多种加密，采用了和冰蝎 2.0 类似的密钥交换方式，哥斯拉建立连接时会发起三次请求，第一次请求数据超级长，用于建立 session，第二三次请求确认连接，第二、三次的请求和响应基本是一致的。</span><br><span class="line">2.User-Agent字段（弱特征），如果采用默认的情况，会暴露使用的jdk信息。不过哥斯拉支持自定义HTTP头部，这个默认特征是可以很容易去除的。</span><br><span class="line">3.Accept字段（弱特征），默认是Accept:text/html, image/gif, image/jpeg, *; q=.2, /; q=.2。同上，这个也可修改，只能作为辅助检测的特征。</span><br><span class="line">4.Cookie中有一个非常关键的特征，最后会有个分号。估计后续的版本会修复。</span><br><span class="line">5.响应体的数据有一定特征，哥斯拉会把一个32位的md5字符串按照一半拆分，分别放在base64编码的数据的前后两部分。整个响应包的结构体征为：md5前十六位+base64+md5后十六位。</span><br></pre></td></tr></table></figure></blockquote>
+
+      
+    </div>
+    
+    
+    
+  </div>
+</article>
+
+  
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/2023/10/28/Linux%20chmod%E7%94%A8%E6%B3%95/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/09/21/CSRF/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">
+        
+      </div>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+    </div>
+  </div>
+  
+
+
+
+
+<div id="settings-container">
+  <div id="dark-mode">dark</div>
+  <div id="sans-font">sans</div>
+</div>
+<script type="text/javascript">
+let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+</script>
+
+
+
+
+</body>
+</html>

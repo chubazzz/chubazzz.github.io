@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+  
+  <meta name="description" content="第一章pwd命令 显示当前所在目录 cd命令cd  进入用户主目录；cd  ~ 进入用户主目录；cd  - 返回进入此目录之前所在的目录；cd  .. 返回上级目录(若当前目录为”&#x2F;“，则执行完后还在”&#x2F;“；”..”为上级目录的意思)；cd  ..&#x2F;.. 返回上两级目录；cd !$ 把上个命令的参数作为cd参数使用。 ls命令ls(list): 列出指定目录列表信息，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2023/08/25/Linux%E8%B5%84%E6%96%99/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第一章pwd命令 显示当前所在目录 cd命令cd  进入用户主目录；cd  ~ 进入用户主目录；cd  - 返回进入此目录之前所在的目录；cd  .. 返回上级目录(若当前目录为”&#x2F;“，则执行完后还在”&#x2F;“；”..”为上级目录的意思)；cd  ..&#x2F;.. 返回上两级目录；cd !$ 把上个命令的参数作为cd参数使用。 ls命令ls(list): 列出指定目录列表信息，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/Linux%E8%B5%84%E6%96%99.assets/image-20230825155814848.png">
+<meta property="article:published_time" content="2023-08-25T07:57:49.223Z">
+<meta property="article:modified_time" content="2023-08-25T09:47:48.221Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/Linux%E8%B5%84%E6%96%99.assets/image-20230825155814848.png"><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+  <h1 id="title">
+    <a href="/">Hexo</a>
+  </h1>
+  <nav>
+    
+    
+      
+      <a class="nav-link" href="/">Home</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/archives">Archives</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/">GitHub</a>
+    
+    
+  </nav>
+</header>
+
+    <div id="content">
+      <article id="post-Linux资料" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        <p>第一章<br>pwd命令 显示当前所在目录</p>
+<p>cd命令<br>cd  进入用户主目录；<br>cd  ~ 进入用户主目录；<br>cd  - 返回进入此目录之前所在的目录；<br>cd  .. 返回上级目录(若当前目录为”&#x2F;“，则执行完后还在”&#x2F;“；”..”为上级目录的意思)；<br>cd  ..&#x2F;.. 返回上两级目录；<br>cd !$ 把上个命令的参数作为cd参数使用。</p>
+<p>ls命令<br>ls(list): 列出指定目录列表信息，如果没有参数默认列出当前目录下的所有文件和文件夹(隐藏文件和文件夹除外)。<br>-l：以长格式显示目录下的内容列表。输出的信息从左到右依次包括文件名，文件类型、权限模式、硬连接数、所有者、组、文件大小和文件的最后修改时间等；<br>-a：显示所有文件和文件夹(包括隐藏文件&#x2F;文件夹)。</p>
+<p>touch  创建文件的常用命令<br>同时创建多个文件touch test1 test2 …  </p>
+<p>rm [命令选项] test	<br>常用命令选项：<br> -f：强制删除文件或目录；<br> -r或-R：递归处理，将指定目录下的所有文件与子目录一并处理；<br> -i：删除已有文件或目录之前先询问用户。</p>
+<p>Linux中创建文件夹命令是mkdir<br>mkdir [命令选项] dirname<br>常用命令选项: -p或–parents 若所要建立目录的上层目录目前尚未建立，则会一立上层目录；</p>
+<p>Linux中删除文件夹的命令是rmdir或者rm -r，命令格式如下：<br>rmdir [命令选项] dirname<br>常用命令选项：-p或–parents：删除指定目录后，若该目录的上层目录已变成空目录，则将其一并删除；</p>
+<p>Linux使用cp命令用来将一个或多个源文件或者目录复制到指定的目录中，命令格式如下：<br>cp [命令选项] 源文件 目的文件<br>常用命令选项：<br>-f：强行复制文件或目录，不论目标文件或目录是否已存在；<br>-i：覆盖既有文件之前先询问用户；<br>-p：保留源文件或目录的属性；<br>-R&#x2F;r：递归处理，将指定目录下的所有文件与子目录一并处理。</p>
+<p>Linux使用mv命令用来对文件或目录重新命名，或者将文件从一个目录移到另一个目录中，命令格式如下：<br>mv [命令选项] 源文件 目标文件<br>常用命令选项：<br>-f：强行复制文件或目录，不论目标文件或目录是否已存在；<br>-i：覆盖既有文件之前先询问用户；<br>-p：保留源文件或目录的属性；<br>-R&#x2F;r：递归处理，将指定目录下的所有文件与子目录一并处理’。</p>
+<p>linux中使用man命令来查询命令的帮助文件,命令格式如下:<br>man [章节] command<br>常用命令如下：<br>d, Ctrl+D: 向文件尾部翻半屏；<br>u, Ctrl+U: 向文件首部翻半屏；<br>q: 退出；<br>#：跳转至第#行；<br>home: 回到文件首部；<br>end：翻至文件尾部。</p>
+<p>man包含9个章节，章节用数字表示，分别是：<br>用户命令<br>系统调用<br>C库调用<br>设备文件及特殊文件<br>配置文件格式<br>游戏<br>杂项<br>管理类的命令<br>Linux 内核API</p>
+<p>linux中使用info命令来查询命令的帮助文件。info页面比man page编写得要更好、更容易理解，也更友好，但man page使用起来确实要更容易得多。一个man page只有一页，而info页面几乎总是将它们的内容组织成多个区段（称为节点），每个区段也可能包含子区段（称为子节点）。<br>命令格式如下：<br>info [命令参数] command<br>常用命令参数选项：<br>-d：添加包含info格式帮助文档的目录；<br>-f：指定要读取的info格式的帮助文档；<br>-n：指定首先访问的info帮助文件的节点；<br>-o：输出被选择的节点内容到指定文件。</p>
+<p>Linux whatis命令<br>whatis用来显示命令的简短描述。<br>命令格式如下：<br>whatis command</p>
+<p>第二章<br>Linux创建用户命令<br>Linux中使用useradd命令来创建一个新用户。<br>命令格式格式：useradd [命令参数] 参数<br>常见命令参数：<br>-d&lt;登入目录&gt;：指定用户登入时的启始目录；<br>-D：查看或变更预设值；<br>-g&lt;群组&gt;：指定用户所属的群组；<br>-m：自动建立用户的登入目录；<br>-M：不要自动建立用户的登入目录；<br>-s：指定用户登入后所使用的shell。<br>useradd必须以root权限才能执行，如果是普通用户想创建一个新用户时，需要在命令前加sudo命令来提升权限为root权限。</p>
+<p><img src="/Linux%E8%B5%84%E6%96%99.assets/image-20230825155814848.png" alt="image-20230825155814848"></p>
+<p><code>Linux</code>中用户信息是保存在<code>/etc/passwd</code>文件中，我们可以使用命令<code>tail /etc/passwd</code>命令查看<code>/etc/passwd</code>文件最后10行中是否存在刚刚新创建的<code>test</code>用户信息。</p>
+<h5 id="Linux删除用户命令"><a href="#Linux删除用户命令" class="headerlink" title="Linux删除用户命令"></a>Linux删除用户命令</h5><p><code>Linux</code>中使用<code>userdel</code>命令来删除一个已经存在的用户。</p>
+<p>命令格式：<code>userdel [命令参数] 参数</code></p>
+<p>常见命令参数：</p>
+<ul>
+<li>-f：强制删除用户，即使用户当前已登录；</li>
+<li>-r：删除用户的同时，删除与用户相关的所有文件。</li>
+</ul>
+<p><code>userdel</code>必须以<code>root</code>权限才能执行，如果是普通用户想使用该命令时，需要在命令前加<code>sudo</code>命令来提升权限为<code>root</code>权限。</p>
+<p>第六章<br>locate 参数 文件&#x2F;目录</p>
+<p>-c   只输出找到的数量<br>-d   使用dapath指定数据库 不再是默认数据库<br>-i    忽略大小写<br>-q   不会显示任何错误信息<br>-e   只显示当前存在的文件条目</p>
+<p>updatedb</p>
+<p>-o&lt;文件&gt;  忽略默认的数据库文件，使用指定的slocate数据库文件<br>-U&lt;目录&gt;  更新指定目录的slocate数据库<br>-v               显示执行的详细过程</p>
+<p>必须得在root权限下使用，可以加sudo命令</p>
+
+      
+    </div>
+    
+    
+    
+  </div>
+</article>
+
+  
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/2023/08/29/%E9%9D%B6%E5%9C%BA%E7%8E%AF%E5%A2%83%E4%BF%AE%E6%94%B9/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/08/11/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">
+        
+          数据库基础
+        
+      </div>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+    </div>
+  </div>
+  
+
+
+
+
+<div id="settings-container">
+  <div id="dark-mode">dark</div>
+  <div id="sans-font">sans</div>
+</div>
+<script type="text/javascript">
+let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+</script>
+
+
+
+
+</body>
+</html>

